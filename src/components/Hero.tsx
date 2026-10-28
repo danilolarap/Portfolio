@@ -12,11 +12,10 @@ export default function Hero({ copy }: { copy: PortfolioContent }) {
   const [screen, setScreen] = useState<Screen>("title");
   const [activeStation, setActiveStation] = useState<StationId | null>(null);
   const [visited, setVisited] = useState<StationId[]>([]);
-  const [playerPosition, setPlayerPosition] = useState<Point>({
-    x: 3.3,
-    y: 4.2,
-  });
-  const [worldVisible, setWorldVisible] = useState(true);
+  const [nearby, setNearby] = useState<StationId | null>(null);
+  const [touchVector, setTouchVector] = useState<Point>({ x: 0, y: 0 });
+  const [actionVersion, setActionVersion] = useState(0);
+  const joystickRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
 
   const openStation = useCallback((id: StationId) => {
@@ -25,35 +24,17 @@ export default function Hero({ copy }: { copy: PortfolioContent }) {
       current.includes(id) ? current : [...current, id],
     );
   }, []);
-  const closeDialog = useCallback(() => {
-    setActiveStation(null);
-    setHelpOpen(false);
-  }, []);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => setWorldVisible(entry.isIntersecting),
-      { threshold: 0.1 },
-    );
-    const section = sectionRef.current;
-    if (section) observer.observe(section);
-    return () => observer.disconnect();
-  }, []);
+  const closeDialog = useCallback(() => setActiveStation(null), []);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") closeDialog();
-      if (
-        worldVisible &&
-        !activeStation &&
-        !helpOpen &&
-        /^[1-4]$/.test(event.key)
-      )
-        openStation(STATIONS[Number(event.key) - 1].id);
+      if (event.key !== "Escape") return;
+      if (activeStation) closeDialog();
+      else if (screen !== "title") setScreen("title");
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [activeStation, closeDialog, helpOpen, openStation, worldVisible]);
+  }, [activeStation, closeDialog, screen]);
 
   const moveTouch = (direction: "up" | "down" | "left" | "right") =>
     setPlayerPosition((point) => {
