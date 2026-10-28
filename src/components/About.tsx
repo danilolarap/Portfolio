@@ -16,7 +16,6 @@ export default function About({ copy }: { copy: PortfolioContent }) {
               <span className="card-index">DANILO / 01</span>
               <h3>{copy.about.featureTitle}</h3>
               <p>{copy.about.featureText}</p>
-              <span className="pending-tag">{copy.common.pending}</span>
             </div>
           </div>
           <div className="about-facts">

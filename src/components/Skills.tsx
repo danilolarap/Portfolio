@@ -14,7 +14,6 @@ export default function Skills({ copy }: { copy: PortfolioContent }) {
                 INVENTORY / {String(index + 1).padStart(2, "0")}
               </span>
               <h3>{category}</h3>
-              <span className="pending-tag">{copy.common.pending}</span>
             </div>
           ))}
         </div>

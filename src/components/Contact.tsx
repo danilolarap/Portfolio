@@ -22,10 +22,22 @@ export default function Contact({ copy }: { copy: PortfolioContent }) {
             </span>
             <span className="contact-action">{copy.contact.openGithub}</span>
           </a>
-          <div className="content-card contact-pending">
-            <span className="card-index">02 / 02</span>
-            <span>{copy.contact.otherChannels}</span>
-          </div>
+          <a
+            className="content-card contact-link"
+            href={`mailto:${copy.contact.emailAddress}`}
+          >
+            <span
+              className="contact-icon contact-icon-email"
+              aria-hidden="true"
+            >
+              <span />
+            </span>
+            <span>
+              <strong>{copy.contact.email}</strong>
+              <small>{copy.contact.emailAddress}</small>
+            </span>
+            <span className="contact-action">{copy.contact.openEmail}</span>
+          </a>
         </div>
       </div>
     </section>
