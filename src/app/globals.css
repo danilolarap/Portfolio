@@ -1260,3 +1260,113 @@ section[id] {
   border-top: 2px solid currentColor;
   border-left: 2px solid currentColor;
 }
+.dpad-arrow.up {
+  transform: translateY(2px) rotate(45deg);
+}
+.dpad-arrow.down {
+  transform: translateY(-2px) rotate(225deg);
+}
+.dpad-arrow.left {
+  transform: translateX(2px) rotate(-45deg);
+}
+.dpad-arrow.right {
+  transform: translateX(-2px) rotate(135deg);
+}
+.panel-projects {
+  --accent: #4dbeb9;
+}
+.panel-skills {
+  --accent: #a786df;
+}
+.panel-about {
+  --accent: #d8ac6d;
+}
+.panel-contact {
+  --accent: #e38375;
+}
+.panel-note {
+  margin-bottom: 24px;
+}
+.panel .start-button {
+  text-decoration: none;
+}
+.panel .start-button .button-arrow {
+  flex: none;
+}
+
+.content-section {
+  position: relative;
+  padding: clamp(76px, 9vw, 124px) 24px;
+  border-top: 1px solid #2e5059;
+  background: #0e2933;
+}
+.content-section:nth-of-type(2n + 1) {
+  background: #102f39;
+}
+.content-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(123, 199, 182, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(123, 199, 182, 0.025) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+.section-container {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 1200px);
+  margin: auto;
+}
+.section-heading {
+  max-width: 720px;
+  margin-bottom: 38px;
+}
+.section-eyebrow {
+  display: inline-block;
+  color: #89d0b7;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  margin-bottom: 14px;
+}
+.section-heading h2 {
+  margin: 0 0 14px;
+  color: #e6f5e9;
+  font-size: clamp(27px, 4.2vw, 49px);
+  line-height: 1.08;
+  letter-spacing: -0.065em;
+  text-transform: uppercase;
+  text-shadow: 3px 3px #275158;
+}
+.section-heading p {
+  margin: 0;
+  max-width: 650px;
+  color: #a6c2ba;
+  font:
+    400 17px/1.6 Arial,
+    sans-serif;
+}
+.content-card {
+  border: 2px solid #4c7578;
+  background: #1b3c47;
+  box-shadow:
+    inset 2px 2px #567b7c,
+    inset -3px -3px #102d38,
+    7px 7px #09232c;
+}
+.content-card h3 {
+  color: #e9f6e8;
+  font-size: 17px;
+  line-height: 1.35;
+  margin: 9px 0 10px;
+  text-transform: uppercase;
+  letter-spacing: -0.04em;
+}
+.content-card p {
+  color: #a7c4bb;
+  font:
+    400 14px/1.55 Arial,
+    sans-serif;
+  margin: 0;
+}
