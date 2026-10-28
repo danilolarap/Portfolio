@@ -418,40 +418,55 @@ export default function GameCanvas({
           drawTree(prop.x, prop.y, (prop.x + prop.y) % 2);
         else block(prop.x, prop.y, "#a6aaa0", "#727f78", "#596c68", 0.55, 14);
       }
-      const held = keys.current;
-      const horizontal =
-        Number(held.has("d") || held.has("ArrowRight")) -
-        Number(held.has("a") || held.has("ArrowLeft"));
-      const vertical =
-        Number(held.has("s") || held.has("ArrowDown")) -
-        Number(held.has("w") || held.has("ArrowUp"));
-      if (!horizontal && !vertical) {
-        setMoving(false);
-        return;
+      STATIONS.forEach((station, index) => drawBuilding(station, index));
+
+      const closest = STATIONS.reduce<{
+        id: StationId | null;
+        distance: number;
+      }>(
+        (best, station) => {
+          const distance = Math.hypot(
+            positionRef.current.x - station.x,
+            positionRef.current.y - station.y,
+          );
+          return distance < best.distance ? { id: station.id, distance } : best;
+        },
+        { id: null, distance: Infinity },
+      );
+      nearbyId = closest.distance < 2.1 ? closest.id : null;
+      if (nearbyId !== nearbyRef.current) {
+        nearbyRef.current = nearbyId;
+        callbacksRef.current.onNearbyChange(nearbyId);
       }
-      setMoving(true);
-      const normal = horizontal && vertical ? Math.SQRT1_2 : 1;
-      const p = positionRef.current;
-      const next = {
-        x: Math.max(
-          0.6,
-          Math.min(7.4, p.x + (vertical * 0.075 + horizontal * 0.04) * normal),
-        ),
-        y: Math.max(
-          0.6,
-          Math.min(7.4, p.y + (vertical * 0.075 - horizontal * 0.04) * normal),
-        ),
-      };
-      positionRef.current = next;
-      onPlayerPosition(next);
-    }, 25);
-    return () => {
-      window.clearInterval(interval);
-      window.removeEventListener("keydown", keyDown);
-      window.removeEventListener("keyup", keyUp);
-      window.removeEventListener("blur", blur);
+      drawPlayer();
+      if (nearbyId) {
+        const label = worldRef.current.open;
+        const point = project(0, 0);
+        context!.fillStyle = "rgba(12, 29, 31, .88)";
+        context!.fillRect(point.x - 58, point.y + 24, 116, 20);
+        context!.strokeStyle = "#d4d8a1";
+        context!.strokeRect(point.x - 58, point.y + 24, 116, 20);
+        context!.fillStyle = "#f0f0d3";
+        context!.font = "bold 10px monospace";
+        context!.textAlign = "center";
+        context!.textBaseline = "middle";
+        context!.fillText(
+          `${label}: ${worldRef.current.stations[nearbyId]}`,
+          point.x,
+          point.y + 34,
+          108,
+        );
+      }
+      frame++;
+      animation = window.requestAnimationFrame(draw);
     };
-  }, [onInteract, onPlayerPosition, paused]);
+
+    animation = window.requestAnimationFrame(draw);
+    return () => {
+      window.cancelAnimationFrame(animation);
+      observer.disconnect();
+    };
+  }, [active]);
 
   const floorTiles: React.ReactNode[] = [];
   for (let x = 0; x < 8; x++)
