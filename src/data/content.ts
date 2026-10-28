@@ -19,6 +19,8 @@ export const navigationIds = [
 ] as const;
 
 export interface PortfolioContent {
+  playerName: string;
+  playerSubtitle: string;
   brandTagline: string;
   navigation: Record<(typeof navigationIds)[number], string>;
   menuOpen: string;
@@ -32,6 +34,20 @@ export interface PortfolioContent {
     explore: string;
     cvUnavailable: string;
     cvNote: string;
+  };
+  welcome: {
+    title: string;
+    subtitle: string;
+    play: string;
+    controls: string;
+    back: string;
+    keyboardTitle: string;
+    mobileTitle: string;
+    objective: string;
+    menuFooter: string;
+    returnToTitle: string;
+    joystickLabel: string;
+    actionLabel: string;
   };
   world: {
     title: string;
@@ -55,6 +71,8 @@ export interface PortfolioContent {
     helpRows: string[];
     directions: { up: string; down: string; left: string; right: string };
     start: string;
+    exit: string;
+    tapHint: string;
   };
   common: { pending: string; pendingDetail: string; section: string };
   about: {
