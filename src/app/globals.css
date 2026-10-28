@@ -498,3 +498,127 @@ button:focus-visible,
   box-shadow: inset -2px -2px #102b33;
   font-size: 11px;
 }
+.keycap.wide {
+  width: 28px;
+}
+.hint-copy {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: #9bb7ae;
+  margin: 0 7px 0 4px;
+}
+.hint-divider {
+  width: 1px;
+  height: 23px;
+  background: #3f6468;
+  margin: 0 7px;
+}
+.hotbar {
+  display: flex;
+  gap: 5px;
+  padding: 7px;
+  background: #142f38;
+  border: 3px solid #5c7a7b;
+  box-shadow:
+    inset 2px 2px #789390,
+    inset -3px -3px #09232d,
+    0 7px 0 rgba(0, 0, 0, 0.22);
+}
+.hotbar-slot {
+  position: relative;
+  width: 51px;
+  height: 47px;
+  display: grid;
+  place-items: center;
+  background: #29444b;
+  border: 2px solid #496b6c;
+  box-shadow:
+    inset 2px 2px #6b8882,
+    inset -2px -2px #142e38;
+  color: white;
+  transition:
+    transform 0.15s,
+    background 0.15s;
+}
+.hotbar-slot:hover,
+.hotbar-slot.selected {
+  background: #3b6567;
+  transform: translateY(-3px);
+  border-color: #bde4c7;
+}
+.slot-number {
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  font-size: 9px;
+  color: #b8d8ca;
+}
+.slot-icon {
+  font-size: 23px;
+  text-shadow: 2px 2px #19333a;
+}
+.slot-icon.projects {
+  color: #70e4dd;
+}
+.slot-icon.skills {
+  color: #c6a6ff;
+}
+.slot-icon.about {
+  color: #f4d28e;
+}
+.slot-icon.contact {
+  color: #fa9a88;
+}
+.slot-visited {
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  width: 5px;
+  height: 5px;
+  background: #9ce9aa;
+}
+.player-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 277px;
+}
+.player-avatar {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  color: #17363e;
+  background: #84d8c3;
+  box-shadow:
+    inset -5px -5px #338f8e,
+    3px 3px #061f27;
+  font-size: 17px;
+}
+.player-chip strong {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+}
+.player-chip small {
+  display: block;
+  font-size: 8px;
+  color: #84aaa2;
+  letter-spacing: 0.06em;
+  margin-top: 4px;
+}
+.hearts {
+  margin-left: auto;
+  color: #ef8e88;
+  letter-spacing: 2px;
+  font-size: 12px;
+}
+.footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  color: #668c8d;
+  font-size: 8px;
+  letter-spacing: 0.18em;
+  padding: 0 0 16px;
+}
