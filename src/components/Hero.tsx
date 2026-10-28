@@ -36,90 +36,35 @@ export default function Hero({ copy }: { copy: PortfolioContent }) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [activeStation, closeDialog, screen]);
 
-  const moveTouch = (direction: "up" | "down" | "left" | "right") =>
-    setPlayerPosition((point) => {
-      const steps = {
-        up: [-0.35, -0.35],
-        down: [0.35, 0.35],
-        left: [-0.25, 0.25],
-        right: [0.25, -0.25],
-      };
-      const [dx, dy] = steps[direction];
-      return {
-        x: Math.max(0.6, Math.min(7.4, point.x + dx)),
-        y: Math.max(0.6, Math.min(7.4, point.y + dy)),
-      };
-    });
-  const interactTouch = () => {
-    const nearest = STATIONS.reduce(
-      (best, station) => {
-        const distance = Math.hypot(
-          playerPosition.x - station.x,
-          playerPosition.y - station.y,
-        );
-        return distance < best.distance ? { id: station.id, distance } : best;
-      },
-      { id: null as StationId | null, distance: Infinity },
-    );
-    if (nearest.id && nearest.distance < 1.8) openStation(nearest.id);
+  const updateJoystick = (event: PointerEvent<HTMLDivElement>) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const radius = bounds.width * 0.36;
+    const dx = event.clientX - (bounds.left + bounds.width / 2);
+    const dy = event.clientY - (bounds.top + bounds.height / 2);
+    const distance = Math.max(1, Math.hypot(dx, dy));
+    const scale = Math.min(radius, distance) / radius;
+    setTouchVector({ x: (dx / distance) * scale, y: (dy / distance) * scale });
+  };
+  const stopJoystick = (event: PointerEvent<HTMLDivElement>) => {
+    if (event.currentTarget.hasPointerCapture(event.pointerId))
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    setTouchVector({ x: 0, y: 0 });
   };
 
   return (
-    <section id="home" ref={sectionRef} className="game-shell hero-section">
-      <div className="ambient ambient-one" aria-hidden="true" />
-      <div className="ambient ambient-two" aria-hidden="true" />
-      <div className="intro">
-        <div className="eyebrow">
-          <span className="eyebrow-line" />
-          {copy.hero.eyebrow}
-          <span className="eyebrow-line" />
-        </div>
-        <h1>
-          {copy.hero.titleFirst}
-          <br />
-          <span>{copy.hero.titleSecond}</span>
-        </h1>
-        <p>{copy.hero.description}</p>
-        <div className="hero-actions">
-          <a className="primary-link" href="#about">
-            {copy.hero.explore}
-            <span className="button-arrow" aria-hidden="true" />
-          </a>
-          <button
-            type="button"
-            className="secondary-link"
-            disabled
-            aria-describedby="cv-note"
-          >
-            {copy.hero.cvUnavailable}
-          </button>
-        </div>
-        <p id="cv-note" className="cv-note">
-          {copy.hero.cvNote}
-        </p>
-      </div>
-      <div className="scene-frame">
-        <div className="scene-topline">
-          <span className="scene-live-dot" />
-          {copy.world.title}
-          <span className="scene-topline-right">V 1.0 / {copy.world.mode}</span>
-          <button
-            className="scene-help"
-            type="button"
-            onClick={() => setHelpOpen(true)}
-            aria-label={copy.world.instructions}
-            title={copy.world.instructions}
-          >
-            ?
-          </button>
-        </div>
+    <section
+      id="home"
+      ref={sectionRef}
+      className={`game-shell hero-section game-screen-${screen}`}
+    >
+      <div className="world-stage">
         <GameCanvas
-          onInteract={openStation}
-          paused={Boolean(activeStation || helpOpen || !worldVisible)}
-          playerPosition={playerPosition}
-          onPlayerPosition={setPlayerPosition}
-          visited={visited}
+          active={screen === "game" && !activeStation}
           world={copy.world}
+          touchVector={touchVector}
+          actionVersion={actionVersion}
+          onInteract={openStation}
+          onNearbyChange={setNearby}
         />
         <div className="scene-corner corner-tl" />
         <div className="scene-corner corner-tr" />
