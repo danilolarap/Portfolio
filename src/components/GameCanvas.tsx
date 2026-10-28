@@ -25,131 +25,38 @@ interface GameCanvasProps {
   onNearbyChange: (id: StationId | null) => void;
 }
 
-function Player({ position, moving }: { position: Point; moving: boolean }) {
-  const p = iso(position.x, position.y);
-  return (
-    <g
-      transform={`translate(${p.x} ${p.y})`}
-      className={moving ? "player-moving" : "player-idle"}
-    >
-      <ellipse cy="7" rx="25" ry="10" fill="#0d3036" opacity=".32" />
-      <path d="M -12 -19 l 12 -5 l 12 5 l -12 6 Z" fill="#2d5c7b" />
-      <path d="M -12 -18 l 12 5 v 25 l -12 -6 Z" fill="#183b63" />
-      <path d="M 0 -13 l 12 -5 v 24 l -12 6 Z" fill="#244e78" />
-      <path
-        d="M -17 -40 l 17 -8 l 17 8 l -17 9 Z"
-        fill="#56d4d1"
-        stroke="#173b45"
-        strokeWidth="2"
-      />
-      <path
-        d="M -17 -40 l 17 9 v 20 l -17 -8 Z"
-        fill="#248f9e"
-        stroke="#173b45"
-        strokeWidth="2"
-      />
-      <path
-        d="M 0 -31 l 17 -9 v 21 l -17 8 Z"
-        fill="#36abb4"
-        stroke="#173b45"
-        strokeWidth="2"
-      />
-      <path
-        d="M -19 -38 l -8 3 v 21 l 8 4 l 5 -4 v -19 Z"
-        fill="#327b8b"
-        stroke="#173b45"
-        strokeWidth="2"
-      />
-      <path
-        d="M 18 -38 l 8 4 v 21 l -8 4 l -5 -5 v -19 Z"
-        fill="#327b8b"
-        stroke="#173b45"
-        strokeWidth="2"
-      />
-      <path
-        d="M -18 -64 l 18 -9 l 18 9 l -18 9 Z"
-        fill="#39536a"
-        stroke="#17333d"
-        strokeWidth="3"
-      />
-      <path
-        d="M -18 -64 l 18 9 v 24 l -18 -9 Z"
-        fill="#e5b18e"
-        stroke="#17333d"
-        strokeWidth="3"
-      />
-      <path
-        d="M 0 -55 l 18 -9 v 24 l -18 9 Z"
-        fill="#efc29e"
-        stroke="#17333d"
-        strokeWidth="3"
-      />
-      <path d="M -18 -64 l 18 -9 l 18 9 l -18 6 l -18 -5 Z" fill="#263b4b" />
-      <path
-        d="M -18 -64 v 8 l 9 4 v -8 M 18 -64 v 8 l -9 4 v -8"
-        fill="#263b4b"
-      />
-      <rect x="4" y="-49" width="4" height="4" fill="#1b3440" />
-      <rect x="13" y="-53" width="3" height="4" fill="#1b3440" />
-      <rect
-        x="-26"
-        y="-95"
-        width="52"
-        height="17"
-        rx="2"
-        fill="#183640"
-        opacity=".92"
-      />
-      <text
-        x="0"
-        y="-83"
-        className="svg-player-name"
-        textAnchor="middle"
-        fill="#e9fff4"
-      >
-        DANILO
-      </text>
-    </g>
-  );
-}
+const colors = {
+  grass: ["#588c32", "#63983a", "#527f2d", "#6a9b3b"],
+  path: ["#b99a61", "#c6a96e", "#ae8d56"],
+  water: ["#3c8b91", "#4b9da0"],
+};
 
-function Sprout({
-  x,
-  y,
-  color = "#3d997e",
-}: {
-  x: number;
-  y: number;
-  color?: string;
-}) {
-  const p = iso(x, y);
-  return (
-    <g transform={`translate(${p.x} ${p.y})`}>
-      <ellipse rx="14" ry="6" fill="#597a73" opacity=".3" />
-      <path d="M 0 0 v -22" stroke="#276b65" strokeWidth="4" />
-      <path
-        d="M 0 -16 l -10 -10 l -5 4 l 7 10 Z"
-        fill={color}
-        stroke="#2c695f"
-        strokeWidth="2"
-      />
-      <path
-        d="M 0 -20 l 11 -12 l 5 4 l -8 13 Z"
-        fill="#62b98e"
-        stroke="#2c695f"
-        strokeWidth="2"
-      />
-    </g>
-  );
+function polygon(
+  context: CanvasRenderingContext2D,
+  points: Point[],
+  fill: string,
+  stroke?: string,
+) {
+  context.beginPath();
+  context.moveTo(points[0].x, points[0].y);
+  for (const point of points.slice(1)) context.lineTo(point.x, point.y);
+  context.closePath();
+  context.fillStyle = fill;
+  context.fill();
+  if (stroke) {
+    context.strokeStyle = stroke;
+    context.lineWidth = 1;
+    context.stroke();
+  }
 }
 
 export default function GameCanvas({
-  onInteract,
-  paused,
-  playerPosition,
-  onPlayerPosition,
-  visited,
+  active,
   world,
+  touchVector,
+  actionVersion,
+  onInteract,
+  onNearbyChange,
 }: GameCanvasProps) {
   const keys = useRef(new Set<string>());
   const positionRef = useRef(playerPosition);
