@@ -18,7 +18,28 @@ export default function Projects({ copy }: { copy: PortfolioContent }) {
                 <span className="card-index">SLOT {project.index}</span>
                 <h3>{project.title}</h3>
                 <p>{project.description}</p>
-                <span className="pending-tag">{copy.common.pending}</span>
+                <div className="project-links">
+                  {project.production && (
+                    <a
+                      className="project-repository-link project-production-link"
+                      href={project.production}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {copy.projects.openProduction}
+                      <span aria-hidden="true" className="button-arrow" />
+                    </a>
+                  )}
+                  <a
+                    className="project-repository-link"
+                    href={project.repository}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {copy.projects.openRepository}
+                    <span aria-hidden="true" className="button-arrow" />
+                  </a>
+                </div>
               </div>
             </article>
           ))}
