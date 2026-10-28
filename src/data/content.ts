@@ -87,23 +87,30 @@ export interface PortfolioContent {
     eyebrow: string;
     title: string;
     intro: string;
-    cards: { index: string; title: string; description: string }[];
+    openRepository: string;
+    openProduction: string;
+    cards: {
+      index: string;
+      title: string;
+      description: string;
+      repository: string;
+      production?: string;
+    }[];
   };
   testimonials: {
     eyebrow: string;
     title: string;
     intro: string;
     cards: string[];
-    note: string;
   };
   experience: {
     eyebrow: string;
     title: string;
     intro: string;
     academic: string;
-    academicText: string;
+    academicItems: { title: string; organization: string }[];
     work: string;
-    workText: string;
+    workItems: { title: string; organization: string }[];
   };
   contact: {
     eyebrow: string;
@@ -112,7 +119,9 @@ export interface PortfolioContent {
     github: string;
     githubDescription: string;
     openGithub: string;
-    otherChannels: string;
+    email: string;
+    emailAddress: string;
+    openEmail: string;
   };
   skills: {
     eyebrow: string;
@@ -127,7 +136,7 @@ export const content: Record<Language, PortfolioContent> = {
   es: {
     playerName: "Danilo Lara",
     playerSubtitle:
-      "Ingeniero de software · Universidad Cooperativa de Colombia",
+      "Desarrollador de software · Estudiante de Ingeniería de Software",
     brandTagline: "UN MUNDO POR EXPLORAR",
     navigation: {
       home: "Inicio",
@@ -190,10 +199,11 @@ export const content: Record<Language, PortfolioContent> = {
         contact: "Portal de contacto",
       },
       stationDescriptions: {
-        projects: "Descubre el espacio reservado para mis creaciones.",
-        skills: "Conoce las herramientas que forman parte de mi inventario.",
-        about: "Lee la historia detrás del personaje.",
-        contact: "Encuentra las formas de conectar conmigo.",
+        projects:
+          "Explora mis proyectos y abre sus versiones publicadas o repositorios.",
+        skills: "Conoce los lenguajes y tecnologías que utilizo.",
+        about: "Conoce mi perfil, mis intereses y lo que me gusta desarrollar.",
+        contact: "Visita mi GitHub o escríbeme por correo electrónico.",
       },
       enterSection: "Ver sección",
       close: "Cerrar",
@@ -223,80 +233,111 @@ export const content: Record<Language, PortfolioContent> = {
       section: "SECCIÓN",
     },
     about: {
-      eyebrow: "01 / EL PERSONAJE",
-      title: "Detrás del avatar",
+      eyebrow: "01 / SOBRE MÍ",
+      title: "Sobre mí",
       intro:
-        "Soy Danilo. Este espacio contará mi historia, mis intereses y la forma en que convierto ideas en proyectos.",
-      featureTitle: "Historia en construcción",
+        "Desarrollador de software en formación, apasionado por programar y mantenerme en movimiento.",
+      featureTitle: "Mi perfil",
       featureText:
-        "Añadiremos aquí una presentación personal auténtica, con fotografía o avatar, trayectoria y objetivos.",
+        "Mi nombre es Danilo Lara. Soy desarrollador de software y actualmente curso la carrera de Ingeniería de Software. Me apasiona la programación, hacer ejercicio, salir al aire libre y todo lo relacionado con el movimiento. Desarrollo aplicaciones, páginas web y APIs.",
       facts: [
-        "Presentación personal",
-        "Intereses y motivación",
-        "Objetivos profesionales",
+        "Desarrollo de aplicaciones",
+        "Desarrollo de páginas web",
+        "Desarrollo de APIs",
       ],
     },
     projects: {
       eyebrow: "02 / EL TALLER",
-      title: "Proyectos por descubrir",
+      title: "Proyectos",
       intro:
-        "Cada proyecto tendrá su propio espacio con contexto, decisiones de diseño, tecnologías, capturas y enlaces.",
+        "Una selección de proyectos interactivos para organizar espacios, planificar equipaje y explorar interfaces 3D.",
+      openRepository: "Ver repositorio",
+      openProduction: "Ver proyecto",
       cards: [
         {
           index: "01",
-          title: "Proyecto destacado",
-          description: "Historia, desafío y resultado del primer proyecto.",
+          title: "RoomLayout",
+          description:
+            "Organizador interactivo de espacios para planificar distribuciones con una interfaz de arrastrar y soltar.",
+          repository: "https://github.com/danilolarap/RoomLayout.git",
+          production: "https://room-layout-red.vercel.app/",
         },
         {
           index: "02",
-          title: "Proyecto destacado",
-          description: "Proceso de creación y decisiones del segundo proyecto.",
+          title: "PackGuide",
+          description:
+            "Organizador de equipaje que optimiza la distribución de artículos dentro de maletas de viaje.",
+          repository: "https://github.com/danilolarap/PackGuide.git",
         },
         {
           index: "03",
-          title: "Proyecto destacado",
-          description: "Demostración y repositorio del tercer proyecto.",
+          title: "TiltClock",
+          description:
+            "Aplicación de reloj con carátulas interactivas en formato GLB.",
+          repository: "https://github.com/danilolarap/TiltClock.git",
+          production: "https://tilt-clock.vercel.app/",
         },
       ],
     },
     testimonials: {
       eyebrow: "03 / VOCES DEL CAMINO",
       title: "Testimonios",
-      intro:
-        "Aquí se mostrarán recomendaciones reales de personas con quienes he trabajado o estudiado.",
-      cards: ["Testimonio 01", "Testimonio 02", "Testimonio 03"],
-      note: "Se necesitan tres testimonios reales para completar esta sección.",
+      intro: "Esta sección se completará más adelante.",
+      cards: [],
     },
     experience: {
       eyebrow: "04 / TRAYECTORIA",
       title: "Experiencia",
-      intro:
-        "Un recorrido claro por mi formación académica y mi experiencia laboral.",
+      intro: "Mi formación académica y experiencia laboral.",
       academic: "Formación académica",
-      academicText: "Institución, programa, fechas y logros relevantes.",
+      academicItems: [
+        {
+          title: "Bachiller",
+          organization: "Colegio San Felipe Neri · Pasto",
+        },
+        {
+          title: "Ingeniería de Software · En curso",
+          organization: "Universidad Cooperativa de Colombia",
+        },
+      ],
       work: "Experiencia laboral",
-      workText: "Rol, organización, periodo y resultados concretos.",
+      workItems: [
+        {
+          title: "Trabajo en bodega",
+          organization: "Bodega de relojes",
+        },
+        {
+          title: "Jefe de bodega",
+          organization: "Bodega de zapatos",
+        },
+        {
+          title: "Vendedor",
+          organization: "Tienda de ropa",
+        },
+      ],
     },
     contact: {
       eyebrow: "05 / EL PORTAL",
       title: "Hablemos",
       intro:
-        "Si quieres conocer mi trabajo o conversar sobre una idea, puedes encontrarme en GitHub. Añadiremos los demás canales cuando estén confirmados.",
+        "Puedes ver mis proyectos en GitHub o escribirme por correo electrónico.",
       github: "GitHub",
-      githubDescription: "Repositorios y actividad de desarrollo.",
+      githubDescription: "@danilolarap · Repositorios y proyectos",
       openGithub: "Visitar perfil",
-      otherChannels: "Correo y otros enlaces: próximamente",
+      email: "Correo electrónico",
+      emailAddress: "danilolarap06@gmail.com",
+      openEmail: "Enviar correo",
     },
     skills: {
       eyebrow: "06 / INVENTARIO EXTRA",
       title: "Habilidades",
       intro:
-        "La sección adicional del portafolio. Aquí organizaremos las herramientas y áreas que forman parte de mi práctica.",
+        "Lenguajes y tecnologías que utilizo para desarrollar aplicaciones y experiencias web.",
       categories: [
-        "Desarrollo frontend",
-        "Desarrollo backend",
-        "Datos",
-        "Herramientas de trabajo",
+        "Python · Java",
+        "JavaScript · TypeScript",
+        "React · Next.js",
+        "HTML · CSS · Tailwind CSS",
       ],
     },
     footer: {
@@ -307,7 +348,7 @@ export const content: Record<Language, PortfolioContent> = {
   },
   en: {
     playerName: "Danilo Lara",
-    playerSubtitle: "Software Engineer · Universidad Cooperativa de Colombia",
+    playerSubtitle: "Software developer · Software Engineering student",
     brandTagline: "A WORLD TO EXPLORE",
     navigation: {
       home: "Home",
@@ -370,10 +411,11 @@ export const content: Record<Language, PortfolioContent> = {
         contact: "Contact portal",
       },
       stationDescriptions: {
-        projects: "Discover the space reserved for my work.",
-        skills: "See the tools in my inventory.",
-        about: "Read the story behind the character.",
-        contact: "Find ways to connect with me.",
+        projects: "Explore my work and open its live versions or repositories.",
+        skills: "See the programming languages and technologies I use.",
+        about:
+          "Learn about my profile, interests, and the things I like to build.",
+        contact: "Visit my GitHub or send me an email.",
       },
       enterSection: "View section",
       close: "Close",
@@ -398,80 +440,110 @@ export const content: Record<Language, PortfolioContent> = {
       section: "SECTION",
     },
     about: {
-      eyebrow: "01 / THE CHARACTER",
-      title: "Behind the avatar",
+      eyebrow: "01 / ABOUT ME",
+      title: "About me",
       intro:
-        "I am Danilo. This space will tell my story, my interests, and how I turn ideas into projects.",
-      featureTitle: "Story in progress",
+        "A software developer in training, motivated by creating things and staying active.",
+      featureTitle: "My profile",
       featureText:
-        "We will add an authentic personal introduction here, with a photo or avatar, background, and goals.",
+        "My name is Danilo Lara. I am a software developer currently studying Software Engineering. I am passionate about programming, exercising, spending time outdoors, and anything related to movement. I develop applications, websites, and APIs.",
       facts: [
-        "Personal introduction",
-        "Interests and motivation",
-        "Professional goals",
+        "Application development",
+        "Website development",
+        "API development",
       ],
     },
     projects: {
       eyebrow: "02 / THE WORKSHOP",
-      title: "Projects to discover",
+      title: "Projects",
       intro:
-        "Each project will have its own space with context, design decisions, technologies, screenshots, and links.",
+        "A selection of interactive projects for arranging spaces, planning luggage, and exploring 3D interfaces.",
+      openRepository: "View repository",
+      openProduction: "Open project",
       cards: [
         {
           index: "01",
-          title: "Featured project",
-          description: "Story, challenge, and outcome of the first project.",
+          title: "RoomLayout",
+          description:
+            "An interactive space planner for arranging layouts with a drag-and-drop interface.",
+          repository: "https://github.com/danilolarap/RoomLayout.git",
+          production: "https://room-layout-red.vercel.app/",
         },
         {
           index: "02",
-          title: "Featured project",
+          title: "PackGuide",
           description:
-            "Creation process and decisions behind the second project.",
+            "A travel packing organizer that optimizes how items fit inside suitcases.",
+          repository: "https://github.com/danilolarap/PackGuide.git",
         },
         {
           index: "03",
-          title: "Featured project",
-          description: "Demo and repository for the third project.",
+          title: "TiltClock",
+          description:
+            "A clock application featuring interactive watch faces in GLB format.",
+          repository: "https://github.com/danilolarap/TiltClock.git",
+          production: "https://tilt-clock.vercel.app/",
         },
       ],
     },
     testimonials: {
       eyebrow: "03 / VOICES ALONG THE WAY",
       title: "Testimonials",
-      intro:
-        "This section will feature real recommendations from people I have worked or studied with.",
-      cards: ["Testimonial 01", "Testimonial 02", "Testimonial 03"],
-      note: "Three real testimonials are needed to complete this section.",
+      intro: "This section will be completed later.",
+      cards: [],
     },
     experience: {
       eyebrow: "04 / THE JOURNEY",
       title: "Experience",
-      intro: "A clear timeline of my education and professional experience.",
+      intro: "My education and work experience.",
       academic: "Education",
-      academicText: "Institution, program, dates, and relevant achievements.",
+      academicItems: [
+        {
+          title: "High school graduate",
+          organization: "Colegio San Felipe Neri · Pasto",
+        },
+        {
+          title: "Software Engineering · In progress",
+          organization: "Universidad Cooperativa de Colombia",
+        },
+      ],
       work: "Work experience",
-      workText: "Role, organization, dates, and concrete outcomes.",
+      workItems: [
+        {
+          title: "Warehouse work",
+          organization: "Watch warehouse",
+        },
+        {
+          title: "Warehouse manager",
+          organization: "Shoe warehouse",
+        },
+        {
+          title: "Sales assistant",
+          organization: "Clothing store",
+        },
+      ],
     },
     contact: {
       eyebrow: "05 / THE PORTAL",
       title: "Let’s talk",
-      intro:
-        "If you would like to see my work or discuss an idea, you can find me on GitHub. We will add other channels once they are confirmed.",
+      intro: "Explore my projects on GitHub or get in touch by email.",
       github: "GitHub",
-      githubDescription: "Repositories and development activity.",
+      githubDescription: "@danilolarap · Repositories and projects",
       openGithub: "Visit profile",
-      otherChannels: "Email and other links: coming soon",
+      email: "Email",
+      emailAddress: "danilolarap06@gmail.com",
+      openEmail: "Send email",
     },
     skills: {
       eyebrow: "06 / EXTRA INVENTORY",
       title: "Skills",
       intro:
-        "The additional section of the portfolio. This is where we will organize the tools and areas that are part of my practice.",
+        "Programming languages and technologies I use to build applications and web experiences.",
       categories: [
-        "Frontend development",
-        "Backend development",
-        "Data",
-        "Work tools",
+        "Python · Java",
+        "JavaScript · TypeScript",
+        "React · Next.js",
+        "HTML · CSS · Tailwind CSS",
       ],
     },
     footer: {
