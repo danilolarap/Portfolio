@@ -13,18 +13,30 @@ export default function Hero({ copy }: { copy: PortfolioContent }) {
   const [activeStation, setActiveStation] = useState<StationId | null>(null);
   const [visited, setVisited] = useState<StationId[]>([]);
   const [nearby, setNearby] = useState<StationId | null>(null);
-  const [touchVector, setTouchVector] = useState<Point>({ x: 0, y: 0 });
+  const touchVector = useRef<Point>({ x: 0, y: 0 });
+  const joystickKnobRef = useRef<HTMLSpanElement>(null);
   const [actionVersion, setActionVersion] = useState(0);
-  const joystickRef = useRef<HTMLDivElement>(null);
-  const sectionRef = useRef<HTMLElement>(null);
 
-  const openStation = useCallback((id: StationId) => {
-    setActiveStation(id);
-    setVisited((current) =>
-      current.includes(id) ? current : [...current, id],
-    );
+  const resetJoystick = useCallback(() => {
+    touchVector.current = { x: 0, y: 0 };
+    if (joystickKnobRef.current)
+      joystickKnobRef.current.style.transform = "translate(0px, 0px)";
   }, []);
+  const openStation = useCallback(
+    (id: StationId) => {
+      resetJoystick();
+      setActiveStation(id);
+      setVisited((current) =>
+        current.includes(id) ? current : [...current, id],
+      );
+    },
+    [resetJoystick],
+  );
   const closeDialog = useCallback(() => setActiveStation(null), []);
+
+  useEffect(() => {
+    if (screen !== "game") resetJoystick();
+  }, [screen, resetJoystick]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -36,7 +48,14 @@ export default function Hero({ copy }: { copy: PortfolioContent }) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [activeStation, closeDialog, screen]);
 
+  const setTouchVector = (vector: Point) => {
+    touchVector.current = vector;
+    if (joystickKnobRef.current)
+      joystickKnobRef.current.style.transform = `translate(${vector.x * 27}px, ${vector.y * 27}px)`;
+  };
+
   const updateJoystick = (event: PointerEvent<HTMLDivElement>) => {
+    if (screen !== "game" || activeStation) return;
     const bounds = event.currentTarget.getBoundingClientRect();
     const radius = bounds.width * 0.36;
     const dx = event.clientX - (bounds.left + bounds.width / 2);
@@ -54,12 +73,12 @@ export default function Hero({ copy }: { copy: PortfolioContent }) {
   return (
     <section
       id="home"
-      ref={sectionRef}
       className={`game-shell hero-section game-screen-${screen}`}
     >
       <div className="world-stage">
         <GameCanvas
           active={screen === "game" && !activeStation}
+          suspended={Boolean(activeStation)}
           world={copy.world}
           touchVector={touchVector}
           actionVersion={actionVersion}
@@ -137,7 +156,6 @@ export default function Hero({ copy }: { copy: PortfolioContent }) {
 
             <div className="touch-game-controls">
               <div
-                ref={joystickRef}
                 className="virtual-joystick"
                 role="group"
                 aria-label={copy.welcome.joystickLabel}
@@ -151,14 +169,10 @@ export default function Hero({ copy }: { copy: PortfolioContent }) {
                 }}
                 onPointerUp={stopJoystick}
                 onPointerCancel={stopJoystick}
+                onLostPointerCapture={resetJoystick}
               >
                 <span className="joystick-ring" />
-                <span
-                  className="joystick-knob"
-                  style={{
-                    transform: `translate(${touchVector.x * 27}px, ${touchVector.y * 27}px)`,
-                  }}
-                />
+                <span ref={joystickKnobRef} className="joystick-knob" />
               </div>
               <button
                 className="touch-action-button"

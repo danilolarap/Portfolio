@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { PointerEvent } from "react";
+import type { PointerEvent, RefObject } from "react";
 import type { PortfolioContent, StationId } from "@/data/content";
 
 export interface Point {
@@ -18,8 +18,9 @@ export const STATIONS: { id: StationId; x: number; y: number }[] = [
 
 interface GameCanvasProps {
   active: boolean;
+  suspended: boolean;
   world: PortfolioContent["world"];
-  touchVector: Point;
+  touchVector: RefObject<Point>;
   actionVersion: number;
   onInteract: (id: StationId) => void;
   onNearbyChange: (id: StationId | null) => void;
@@ -30,6 +31,18 @@ const colors = {
   path: ["#b99a61", "#c6a96e", "#ae8d56"],
   water: ["#3c8b91", "#4b9da0"],
 };
+const WORLD_ORIGIN: Point = { x: 6, y: 6 };
+const SCENERY = [
+  { x: 1, y: 2, type: "tree" },
+  { x: 10, y: 1, type: "tree" },
+  { x: 1, y: 7, type: "tree" },
+  { x: 10, y: 10, type: "tree" },
+  { x: 2, y: 10, type: "tree" },
+  { x: 8, y: 1, type: "tree" },
+  { x: 2, y: 4, type: "rock" },
+  { x: 9, y: 7, type: "rock" },
+  { x: 7, y: 10, type: "rock" },
+] as const;
 
 function polygon(
   context: CanvasRenderingContext2D,
@@ -52,6 +65,7 @@ function polygon(
 
 export default function GameCanvas({
   active,
+  suspended,
   world,
   touchVector,
   actionVersion,
@@ -66,19 +80,19 @@ export default function GameCanvas({
   const movementRef = useRef(0);
   const facingRef = useRef<"front" | "back" | "left" | "right">("front");
   const keysRef = useRef(new Set<string>());
-  const touchRef = useRef(touchVector);
   const nearbyRef = useRef<StationId | null>(null);
+  const visibleRef = useRef(true);
   const lastActionRef = useRef(actionVersion);
   const callbacksRef = useRef({ onInteract, onNearbyChange });
   const worldRef = useRef(world);
 
-  touchRef.current = touchVector;
   callbacksRef.current = { onInteract, onNearbyChange };
   worldRef.current = world;
 
   useEffect(() => {
     if (!active) return;
     const onKeyDown = (event: KeyboardEvent) => {
+      if (!visibleRef.current || document.hidden) return;
       const key = event.key.toLowerCase();
       if (
         [
@@ -94,6 +108,11 @@ export default function GameCanvas({
         ].includes(key)
       ) {
         event.preventDefault();
+        if (key === "e") {
+          if (!event.repeat && nearbyRef.current)
+            callbacksRef.current.onInteract(nearbyRef.current);
+          return;
+        }
         keysRef.current.add(key);
       }
     };
@@ -122,28 +141,52 @@ export default function GameCanvas({
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const context = canvas?.getContext("2d");
-    if (!canvas || !context) return;
-    let frame = 0;
+    const mainContext = canvas?.getContext("2d");
+    if (!canvas || !mainContext) return;
+    let context: CanvasRenderingContext2D = mainContext;
     let animation = 0;
     let previousTime = 0;
+    let lastPaint = 0;
     let width = 0;
     let height = 0;
     let tile = 44;
+    let pixelRatio = 1;
+    let backdrop: CanvasGradient | null = null;
+    let worldLayer: HTMLCanvasElement | null = null;
+    let layerUnavailable = false;
+    let layerWidth = 0;
+    let layerHeight = 0;
     let nearbyId: StationId | null = null;
 
     const resize = () => {
       const bounds = canvas.getBoundingClientRect();
       const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      if (
+        backdrop &&
+        width === bounds.width &&
+        height === bounds.height &&
+        pixelRatio === ratio
+      )
+        return;
       width = bounds.width;
       height = bounds.height;
+      pixelRatio = ratio;
       canvas.width = Math.round(width * ratio);
       canvas.height = Math.round(height * ratio);
-      context?.setTransform(ratio, 0, 0, ratio, 0, 0);
+      mainContext.setTransform(ratio, 0, 0, ratio, 0, 0);
       tile = Math.max(27, Math.min(76, Math.min(width / 11.5, height / 7.7)));
+      backdrop = mainContext.createLinearGradient(0, 0, 0, height);
+      backdrop.addColorStop(0, "#25485a");
+      backdrop.addColorStop(1, "#172e39");
+      worldLayer = null;
+      layerUnavailable = false;
     };
     resize();
-    const observer = new ResizeObserver(resize);
+    let scheduleFrame = () => {};
+    const observer = new ResizeObserver(() => {
+      resize();
+      scheduleFrame();
+    });
     observer.observe(canvas);
 
     const project = (x: number, y: number, z = 0): Point => ({
@@ -156,10 +199,7 @@ export default function GameCanvas({
       y: number,
       type: "grass" | "path" | "water",
     ) => {
-      const center = project(
-        x - positionRef.current.x,
-        y - positionRef.current.y,
-      );
+      const center = project(x - WORLD_ORIGIN.x, y - WORLD_ORIGIN.y);
       const halfW = tile * 0.5;
       const halfH = tile * 0.25;
       const palette =
@@ -199,48 +239,32 @@ export default function GameCanvas({
       size = 0.9,
       elevation = 13,
     ) => {
-      const a = project(
-        x - positionRef.current.x,
-        y - positionRef.current.y,
-        elevation,
-      );
+      const a = project(x - WORLD_ORIGIN.x, y - WORLD_ORIGIN.y, elevation);
       const b = project(
-        x + size - positionRef.current.x,
-        y - positionRef.current.y,
+        x + size - WORLD_ORIGIN.x,
+        y - WORLD_ORIGIN.y,
         elevation,
       );
       const c = project(
-        x + size - positionRef.current.x,
-        y + size - positionRef.current.y,
+        x + size - WORLD_ORIGIN.x,
+        y + size - WORLD_ORIGIN.y,
         elevation,
       );
       const d = project(
-        x - positionRef.current.x,
-        y + size - positionRef.current.y,
+        x - WORLD_ORIGIN.x,
+        y + size - WORLD_ORIGIN.y,
         elevation,
       );
-      const b0 = project(
-        x + size - positionRef.current.x,
-        y - positionRef.current.y,
-      );
-      const c0 = project(
-        x + size - positionRef.current.x,
-        y + size - positionRef.current.y,
-      );
-      const d0 = project(
-        x - positionRef.current.x,
-        y + size - positionRef.current.y,
-      );
+      const b0 = project(x + size - WORLD_ORIGIN.x, y - WORLD_ORIGIN.y);
+      const c0 = project(x + size - WORLD_ORIGIN.x, y + size - WORLD_ORIGIN.y);
+      const d0 = project(x - WORLD_ORIGIN.x, y + size - WORLD_ORIGIN.y);
       polygon(context!, [d, c, c0, d0], left);
       polygon(context!, [b, c, c0, b0], right);
       polygon(context!, [a, b, c, d], top, "rgba(27, 51, 35, .45)");
     };
 
     const drawTree = (x: number, y: number, variant: number) => {
-      const point = project(
-        x - positionRef.current.x,
-        y - positionRef.current.y,
-      );
+      const point = project(x - WORLD_ORIGIN.x, y - WORLD_ORIGIN.y);
       block(x - 0.1, y - 0.1, "#795234", "#62402b", "#503722", 0.24, 18);
       block(
         x - 0.54,
@@ -258,11 +282,7 @@ export default function GameCanvas({
 
     const drawChest = (x: number, y: number) => {
       block(x, y, "#bd8741", "#8e552c", "#754325", 0.58, 11);
-      const point = project(
-        x + 0.3 - positionRef.current.x,
-        y - positionRef.current.y,
-        20,
-      );
+      const point = project(x + 0.3 - WORLD_ORIGIN.x, y - WORLD_ORIGIN.y, 20);
       context!.fillStyle = "#f0c36a";
       context!.fillRect(point.x - 2, point.y + 4, 4, 3);
       context!.fillStyle = "#593a25";
@@ -287,8 +307,8 @@ export default function GameCanvas({
       block(x + 0.68, y + 0.06, palettes[3], palettes[3], palettes[3], 0.3, 43);
       block(x + 0.42, y - 0.1, palettes[0], palettes[1], palettes[2], 0.45, 75);
       const sign = project(
-        station.x - positionRef.current.x,
-        station.y - 1.45 - positionRef.current.y,
+        station.x - WORLD_ORIGIN.x,
+        station.y - 1.45 - WORLD_ORIGIN.y,
         54,
       );
       context!.fillStyle = "#142b29";
@@ -308,10 +328,49 @@ export default function GameCanvas({
       drawChest(station.x + 0.75, station.y + 0.63);
     };
 
-    const drawPlayer = () => {
+    const drawWorld = () => {
+      for (let y = 0; y < 12; y++) {
+        for (let x = 0; x < 12; x++) {
+          const inPath =
+            ((x === 5 || x === 6) && y > 1 && y < 11) ||
+            ((y === 5 || y === 6) && x > 1 && x < 11);
+          const water =
+            (x === 0 && y > 7) || (x === 1 && y > 9) || (x === 11 && y < 3);
+          drawTile(x, y, water ? "water" : inPath ? "path" : "grass");
+        }
+      }
+      for (const prop of SCENERY) {
+        if (prop.type === "tree")
+          drawTree(prop.x, prop.y, (prop.x + prop.y) % 2);
+        else block(prop.x, prop.y, "#a6aaa0", "#727f78", "#596c68", 0.55, 14);
+      }
+      STATIONS.forEach((station, index) => drawBuilding(station, index));
+    };
+
+    const buildWorldLayer = () => {
+      layerWidth = Math.ceil(12 * tile + 80);
+      layerHeight = Math.ceil(6.5 * tile + 180);
+      const layer = document.createElement("canvas");
+      layer.width = Math.round(layerWidth * pixelRatio);
+      layer.height = Math.round(layerHeight * pixelRatio);
+      const layerContext = layer.getContext("2d");
+      if (!layerContext) return null;
+
+      context = layerContext;
+      context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+      context.translate(
+        layerWidth * 0.5 - width * 0.5,
+        layerHeight * 0.5 + 35 - height * 0.54,
+      );
+      drawWorld();
+      context = mainContext;
+      return layer;
+    };
+
+    const drawPlayer = (time: number) => {
       const center = project(0, 0);
       const motion = movementRef.current;
-      const idleBreath = Math.sin(frame * 0.055) * 0.45;
+      const idleBreath = Math.sin(time * 0.0033) * 0.45;
       const bob =
         Math.abs(Math.sin(walkPhaseRef.current * 2)) * 2.2 * motion +
         idleBreath;
@@ -391,6 +450,7 @@ export default function GameCanvas({
 
       context!.font = `bold ${Math.max(8, tile * 0.22)}px monospace`;
       context!.textAlign = "center";
+      context!.textBaseline = "middle";
       context!.fillStyle = "#f2f2d8";
       context!.fillText(
         worldRef.current.playerRole.split(" /")[0],
@@ -399,7 +459,19 @@ export default function GameCanvas({
       );
     };
 
+    let inViewport = true;
     const draw = (time: number) => {
+      animation = 0;
+      if (!inViewport || document.hidden) return;
+      const idle =
+        movementRef.current < 0.04 &&
+        keysRef.current.size === 0 &&
+        Math.hypot(touchVector.current.x, touchVector.current.y) < 0.08;
+      if (!suspended && (!active || idle) && time - lastPaint < 1000 / 30 - 1) {
+        animation = window.requestAnimationFrame(draw);
+        return;
+      }
+      lastPaint = time;
       const delta = previousTime
         ? Math.min((time - previousTime) / 1000, 0.05)
         : 0;
@@ -412,7 +484,7 @@ export default function GameCanvas({
         const sy =
           Number(keys.has("s") || keys.has("arrowdown")) -
           Number(keys.has("w") || keys.has("arrowup"));
-        const touch = touchRef.current;
+        const touch = touchVector.current;
         const moveX = sx || touch.x;
         const moveY = sy || touch.y;
         const inputLength = Math.hypot(moveX, moveY);
@@ -465,48 +537,36 @@ export default function GameCanvas({
         );
         if (movementRef.current > 0.04)
           walkPhaseRef.current += delta * (8 + movementRef.current * 7);
-
-        if (keys.has("e")) {
-          if (nearbyRef.current)
-            callbacksRef.current.onInteract(nearbyRef.current);
-          keys.delete("e");
-        }
       }
 
       context!.clearRect(0, 0, width, height);
-      const backdrop = context!.createLinearGradient(0, 0, 0, height);
-      backdrop.addColorStop(0, "#25485a");
-      backdrop.addColorStop(1, "#172e39");
-      context!.fillStyle = backdrop;
+      context!.fillStyle = backdrop ?? "#25485a";
       context!.fillRect(0, 0, width, height);
-      for (let y = 0; y < 12; y++) {
-        for (let x = 0; x < 12; x++) {
-          const inPath =
-            ((x === 5 || x === 6) && y > 1 && y < 11) ||
-            ((y === 5 || y === 6) && x > 1 && x < 11);
-          const water =
-            (x === 0 && y > 7) || (x === 1 && y > 9) || (x === 11 && y < 3);
-          drawTile(x, y, water ? "water" : inPath ? "path" : "grass");
-        }
+      if (!worldLayer && !layerUnavailable) {
+        worldLayer = buildWorldLayer();
+        layerUnavailable = !worldLayer;
       }
-
-      const props = [
-        { x: 1, y: 2, type: "tree" },
-        { x: 10, y: 1, type: "tree" },
-        { x: 1, y: 7, type: "tree" },
-        { x: 10, y: 10, type: "tree" },
-        { x: 2, y: 10, type: "tree" },
-        { x: 8, y: 1, type: "tree" },
-        { x: 2, y: 4, type: "rock" },
-        { x: 9, y: 7, type: "rock" },
-        { x: 7, y: 10, type: "rock" },
-      ];
-      for (const prop of props) {
-        if (prop.type === "tree")
-          drawTree(prop.x, prop.y, (prop.x + prop.y) % 2);
-        else block(prop.x, prop.y, "#a6aaa0", "#727f78", "#596c68", 0.55, 14);
+      const cameraX = positionRef.current.x - WORLD_ORIGIN.x;
+      const cameraY = positionRef.current.y - WORLD_ORIGIN.y;
+      if (worldLayer) {
+        context!.drawImage(
+          worldLayer,
+          width * 0.5 - layerWidth * 0.5 - (cameraX - cameraY) * tile * 0.5,
+          height * 0.54 -
+            (layerHeight * 0.5 + 35) -
+            (cameraX + cameraY) * tile * 0.25,
+          layerWidth,
+          layerHeight,
+        );
+      } else {
+        context!.save();
+        context!.translate(
+          -(cameraX - cameraY) * tile * 0.5,
+          -(cameraX + cameraY) * tile * 0.25,
+        );
+        drawWorld();
+        context!.restore();
       }
-      STATIONS.forEach((station, index) => drawBuilding(station, index));
 
       const closest = STATIONS.reduce<{
         id: StationId | null;
@@ -526,7 +586,7 @@ export default function GameCanvas({
         nearbyRef.current = nearbyId;
         callbacksRef.current.onNearbyChange(nearbyId);
       }
-      drawPlayer();
+      drawPlayer(time);
       if (nearbyId) {
         const label = worldRef.current.open;
         const point = project(0, 0);
@@ -545,16 +605,47 @@ export default function GameCanvas({
           108,
         );
       }
-      frame++;
-      animation = window.requestAnimationFrame(draw);
+      if (!suspended) animation = window.requestAnimationFrame(draw);
     };
 
-    animation = window.requestAnimationFrame(draw);
+    scheduleFrame = () => {
+      visibleRef.current = inViewport && !document.hidden;
+      if (visibleRef.current && !animation) {
+        previousTime = 0;
+        lastPaint = 0;
+        animation = window.requestAnimationFrame(draw);
+      }
+    };
+    const updateVisibility = () => {
+      if (!inViewport || document.hidden) {
+        window.cancelAnimationFrame(animation);
+        animation = 0;
+        previousTime = 0;
+        keysRef.current.clear();
+        velocityRef.current = { x: 0, y: 0 };
+        movementRef.current = 0;
+        visibleRef.current = false;
+      } else {
+        scheduleFrame();
+      }
+    };
+    const visibilityObserver =
+      typeof IntersectionObserver === "undefined"
+        ? null
+        : new IntersectionObserver(([entry]) => {
+            inViewport = entry.isIntersecting;
+            updateVisibility();
+          });
+    visibilityObserver?.observe(canvas);
+    document.addEventListener("visibilitychange", updateVisibility);
+    scheduleFrame();
     return () => {
       window.cancelAnimationFrame(animation);
       observer.disconnect();
+      visibilityObserver?.disconnect();
+      document.removeEventListener("visibilitychange", updateVisibility);
     };
-  }, [active]);
+  }, [active, suspended, world, touchVector]);
 
   const selectStationAtPoint = (event: PointerEvent<HTMLCanvasElement>) => {
     if (!active) return;
