@@ -26,6 +26,89 @@ export default function WorldDialog({
     ? copy.world.stationTitles[stationId]
     : copy.world.helpTitle;
 
+  const stationContent = () => {
+    if (stationId === "about") {
+      return (
+        <div className="station-about-content">
+          <p>{copy.about.featureText}</p>
+          <ul>
+            {copy.about.facts.map((fact) => (
+              <li key={fact}>{fact}</li>
+            ))}
+          </ul>
+        </div>
+      );
+    }
+
+    if (stationId === "projects") {
+      return (
+        <div className="station-project-list">
+          {copy.projects.cards.map((project) => (
+            <article className="station-project" key={project.index}>
+              <div>
+                <span className="station-project-index">{project.index}</span>
+                <h3>{project.title}</h3>
+                <p>{project.description}</p>
+              </div>
+              <div className="station-project-links">
+                {project.production && (
+                  <a
+                    href={project.production}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {copy.projects.openProduction}
+                  </a>
+                )}
+                <a
+                  href={project.repository}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {copy.projects.openRepository}
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
+      );
+    }
+
+    if (stationId === "skills") {
+      return (
+        <div className="station-skill-list">
+          {copy.skills.categories.map((skill, index) => (
+            <div className="station-skill" key={skill}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <strong>{skill}</strong>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    if (stationId === "contact") {
+      return (
+        <div className="station-contact-list">
+          <a
+            href="https://github.com/danilolarap"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>{copy.contact.github}</span>
+            <strong>@danilolarap</strong>
+          </a>
+          <a href={`mailto:${copy.contact.emailAddress}`}>
+            <span>{copy.contact.email}</span>
+            <strong>{copy.contact.emailAddress}</strong>
+          </a>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <div
       className="overlay"
@@ -74,9 +157,9 @@ export default function WorldDialog({
                 </div>
               ))}
             </div>
-          ) : (
-            <div className="panel-note">{copy.common.pendingDetail}</div>
-          )}
+          ) : stationId ? (
+            stationContent()
+          ) : null}
           {stationId ? (
             <a
               className="start-button"

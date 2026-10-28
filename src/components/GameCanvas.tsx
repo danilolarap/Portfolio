@@ -61,6 +61,10 @@ export default function GameCanvas({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pointerStartRef = useRef<Point | null>(null);
   const positionRef = useRef<Point>({ x: 6, y: 6 });
+  const velocityRef = useRef<Point>({ x: 0, y: 0 });
+  const walkPhaseRef = useRef(0);
+  const movementRef = useRef(0);
+  const facingRef = useRef<"front" | "back" | "left" | "right">("front");
   const keysRef = useRef(new Set<string>());
   const touchRef = useRef(touchVector);
   const nearbyRef = useRef<StationId | null>(null);
@@ -105,6 +109,8 @@ export default function GameCanvas({
       window.removeEventListener("keyup", onKeyUp);
       window.removeEventListener("blur", clearKeys);
       clearKeys();
+      velocityRef.current = { x: 0, y: 0 };
+      movementRef.current = 0;
     };
   }, [active]);
 
@@ -304,39 +310,92 @@ export default function GameCanvas({
 
     const drawPlayer = () => {
       const center = project(0, 0);
+      const motion = movementRef.current;
+      const idleBreath = Math.sin(frame * 0.055) * 0.45;
       const bob =
-        Math.sin(frame * 0.14) *
-        (keysRef.current.size ||
-        Math.hypot(touchRef.current.x, touchRef.current.y) > 0.1
-          ? 2
-          : 0.7);
+        Math.abs(Math.sin(walkPhaseRef.current * 2)) * 2.2 * motion +
+        idleBreath;
+      const stride = Math.sin(walkPhaseRef.current) * 4.2 * motion;
+      const oppositeStride = -stride;
+      const scale = Math.max(0.72, Math.min(1.15, tile / 46));
+
+      context!.save();
+      context!.translate(center.x, center.y + bob);
+      context!.scale(scale, scale);
       context!.fillStyle = "rgba(14, 39, 33, .42)";
-      context!.fillRect(center.x - 11, center.y + 13, 23, 5);
-      context!.fillStyle = "#245073";
-      context!.fillRect(center.x - 9, center.y + 2 + bob, 7, 13);
-      context!.fillRect(center.x + 2, center.y + 2 + bob, 7, 13);
+      context!.beginPath();
+      context!.ellipse(0, 17, 13 - motion * 1.5, 4, 0, 0, Math.PI * 2);
+      context!.fill();
+
       context!.fillStyle = "#1b2934";
-      context!.fillRect(center.x - 10, center.y + 12 + bob, 8, 4);
-      context!.fillRect(center.x + 1, center.y + 12 + bob, 8, 4);
-      context!.fillStyle = "#28aeb5";
-      context!.fillRect(center.x - 10, center.y - 11 + bob, 20, 15);
+      context!.fillRect(-9 + stride, 12 + Math.max(0, -stride) * 0.25, 8, 4);
+      context!.fillRect(
+        1 + oppositeStride,
+        12 + Math.max(0, stride) * 0.25,
+        8,
+        4,
+      );
+      context!.fillStyle = "#31567a";
+      context!.fillRect(-8 + stride, 2 + Math.max(0, -stride) * 0.3, 7, 12);
+      context!.fillRect(
+        1 + oppositeStride,
+        2 + Math.max(0, stride) * 0.3,
+        7,
+        12,
+      );
+
+      const armSwing = -stride * 0.8;
+      context!.fillStyle = "#157f8c";
+      context!.fillRect(-14, -9 + armSwing, 5, 13);
+      context!.fillRect(9, -9 - armSwing, 5, 13);
       context!.fillStyle = "#dca775";
-      context!.fillRect(center.x - 8, center.y - 24 + bob, 16, 14);
+      context!.fillRect(-14, 2 + armSwing, 5, 5);
+      context!.fillRect(9, 2 - armSwing, 5, 5);
+
+      context!.fillStyle = "#176f7a";
+      context!.fillRect(-10, -12, 20, 17);
+      context!.fillStyle = "#28aeb5";
+      context!.fillRect(-9, -12, 17, 14);
+      context!.fillStyle = "#8fe1d1";
+      context!.fillRect(-7, -10, 4, 5);
+
+      context!.fillStyle = "#bf875e";
+      context!.fillRect(-9, -29, 18, 18);
+      context!.fillStyle = "#dca775";
+      context!.fillRect(-7, -29, 14, 16);
       context!.fillStyle = "#315f8c";
-      context!.fillRect(center.x - 9, center.y - 27 + bob, 18, 6);
-      context!.fillStyle = "#e9e4c7";
-      context!.fillRect(center.x - 5, center.y - 19 + bob, 3, 3);
-      context!.fillRect(center.x + 3, center.y - 19 + bob, 3, 3);
-      context!.fillStyle = "#293642";
-      context!.fillRect(center.x - 4, center.y - 18 + bob, 2, 2);
-      context!.fillRect(center.x + 4, center.y - 18 + bob, 2, 2);
+      context!.fillRect(-10, -32, 20, 7);
+      context!.fillRect(-8, -36, 15, 5);
+      context!.fillStyle = "#447ba4";
+      context!.fillRect(-5, -35, 8, 3);
+
+      if (facingRef.current === "front") {
+        context!.fillStyle = "#e9e4c7";
+        context!.fillRect(-5, -23, 4, 4);
+        context!.fillRect(3, -23, 4, 4);
+        context!.fillStyle = "#293642";
+        context!.fillRect(-3, -22, 2, 3);
+        context!.fillRect(5, -22, 2, 3);
+      } else if (facingRef.current === "left") {
+        context!.fillStyle = "#e9e4c7";
+        context!.fillRect(-6, -23, 4, 4);
+        context!.fillStyle = "#293642";
+        context!.fillRect(-6, -22, 2, 3);
+      } else if (facingRef.current === "right") {
+        context!.fillStyle = "#e9e4c7";
+        context!.fillRect(2, -23, 4, 4);
+        context!.fillStyle = "#293642";
+        context!.fillRect(4, -22, 2, 3);
+      }
+      context!.restore();
+
       context!.font = `bold ${Math.max(8, tile * 0.22)}px monospace`;
       context!.textAlign = "center";
       context!.fillStyle = "#f2f2d8";
       context!.fillText(
         worldRef.current.playerRole.split(" /")[0],
         center.x,
-        center.y - 34 + bob,
+        center.y - 43 * scale + bob,
       );
     };
 
@@ -356,28 +415,57 @@ export default function GameCanvas({
         const touch = touchRef.current;
         const moveX = sx || touch.x;
         const moveY = sy || touch.y;
-        const length = Math.hypot(moveX, moveY);
-        if (length > 0.08) {
-          const speed = (2.45 * delta) / Math.max(1, length);
-          const dx = (moveX + moveY) * 0.707 * speed;
-          const dy = (moveY - moveX) * 0.707 * speed;
-          const next = {
-            x: positionRef.current.x + dx,
-            y: positionRef.current.y + dy,
-          };
-          if (
-            next.x > 0.45 &&
-            next.x < 11.55 &&
-            next.y > 0.45 &&
-            next.y < 11.55
-          ) {
-            const blocked = STATIONS.some(
-              (station) =>
-                Math.hypot(next.x - station.x, next.y - station.y) < 1.02,
-            );
-            if (!blocked) positionRef.current = next;
-          }
+        const inputLength = Math.hypot(moveX, moveY);
+        const inputStrength = Math.min(1, inputLength);
+        const targetVelocity =
+          inputLength > 0.08
+            ? {
+                x:
+                  (((moveX + moveY) * 0.707) / inputLength) *
+                  2.45 *
+                  inputStrength,
+                y:
+                  (((moveY - moveX) * 0.707) / inputLength) *
+                  2.45 *
+                  inputStrength,
+              }
+            : { x: 0, y: 0 };
+        const response = Math.min(1, delta * (inputStrength > 0.08 ? 11 : 13));
+        velocityRef.current.x +=
+          (targetVelocity.x - velocityRef.current.x) * response;
+        velocityRef.current.y +=
+          (targetVelocity.y - velocityRef.current.y) * response;
+
+        if (inputStrength > 0.08) {
+          if (Math.abs(moveX) > Math.abs(moveY))
+            facingRef.current = moveX < 0 ? "left" : "right";
+          else facingRef.current = moveY < 0 ? "back" : "front";
         }
+
+        const next = {
+          x: positionRef.current.x + velocityRef.current.x * delta,
+          y: positionRef.current.y + velocityRef.current.y * delta,
+        };
+        const outsideWorld =
+          next.x <= 0.45 ||
+          next.x >= 11.55 ||
+          next.y <= 0.45 ||
+          next.y >= 11.55;
+        const blockedByStation = STATIONS.some(
+          (station) =>
+            Math.hypot(next.x - station.x, next.y - station.y) < 1.02,
+        );
+        if (outsideWorld || blockedByStation)
+          velocityRef.current = { x: 0, y: 0 };
+        else positionRef.current = next;
+
+        movementRef.current = Math.min(
+          1,
+          Math.hypot(velocityRef.current.x, velocityRef.current.y) / 2.45,
+        );
+        if (movementRef.current > 0.04)
+          walkPhaseRef.current += delta * (8 + movementRef.current * 7);
+
         if (keys.has("e")) {
           if (nearbyRef.current)
             callbacksRef.current.onInteract(nearbyRef.current);
