@@ -66,124 +66,216 @@ export default function Hero({ copy }: { copy: PortfolioContent }) {
           onInteract={openStation}
           onNearbyChange={setNearby}
         />
-        <div className="scene-corner corner-tl" />
-        <div className="scene-corner corner-tr" />
-        <div className="scene-corner corner-bl" />
-        <div className="scene-corner corner-br" />
-        <div className="minimap" aria-label={copy.world.map}>
-          <div className="minimap-head">
-            <span>{copy.world.map}</span>
-            <span>01 / 01</span>
+        <div className="game-vignette" aria-hidden="true" />
+
+        {screen === "game" ? (
+          <>
+            <div className="game-hud-top">
+              <div className="hud-world-title">
+                <span className="hud-live-dot" />
+                <span>{copy.world.title}</span>
+                <small>{copy.world.mode}</small>
+              </div>
+              <div className="hud-progress">
+                <span>
+                  {visited.length === 4
+                    ? copy.world.completed
+                    : `${visited.length} / 4 ${copy.world.discovered}`}
+                </span>
+                <span className="hud-progress-track">
+                  <span style={{ width: `${visited.length * 25}%` }} />
+                </span>
+              </div>
+              <button
+                className="hud-menu-button"
+                type="button"
+                onClick={() => setScreen("title")}
+              >
+                {copy.world.exit}
+              </button>
+            </div>
+
+            <div className="game-hud-bottom">
+              <div className="game-player-card">
+                <span className="tiny-player" aria-hidden="true">
+                  <i />
+                </span>
+                <span>
+                  <strong>{copy.playerName}</strong>
+                  <small>{copy.world.playerRole}</small>
+                </span>
+              </div>
+              <div className="game-key-hints">
+                <span>
+                  <kbd>W</kbd>
+                  <kbd>A</kbd>
+                  <kbd>S</kbd>
+                  <kbd>D</kbd>
+                  <small>{copy.world.move}</small>
+                </span>
+                <span>
+                  <kbd>E</kbd>
+                  <small>{copy.world.interact}</small>
+                </span>
+              </div>
+              <div className="game-hotbar" aria-label={copy.world.title}>
+                {STATIONS.map((station, index) => (
+                  <button
+                    key={station.id}
+                    type="button"
+                    onClick={() => openStation(station.id)}
+                    aria-label={`${copy.world.open} ${copy.world.stations[station.id]}`}
+                    title={copy.world.stations[station.id]}
+                  >
+                    <small>{index + 1}</small>
+                    <span className={`hotbar-glyph glyph-${station.id}`} />
+                    {visited.includes(station.id) && <i />}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="touch-game-controls">
+              <div
+                ref={joystickRef}
+                className="virtual-joystick"
+                role="group"
+                aria-label={copy.welcome.joystickLabel}
+                onPointerDown={(event) => {
+                  event.currentTarget.setPointerCapture(event.pointerId);
+                  updateJoystick(event);
+                }}
+                onPointerMove={(event) => {
+                  if (event.currentTarget.hasPointerCapture(event.pointerId))
+                    updateJoystick(event);
+                }}
+                onPointerUp={stopJoystick}
+                onPointerCancel={stopJoystick}
+              >
+                <span className="joystick-ring" />
+                <span
+                  className="joystick-knob"
+                  style={{
+                    transform: `translate(${touchVector.x * 27}px, ${touchVector.y * 27}px)`,
+                  }}
+                />
+              </div>
+              <button
+                className="touch-action-button"
+                type="button"
+                onClick={() => setActionVersion((value) => value + 1)}
+                aria-label={copy.welcome.actionLabel}
+              >
+                <span className="action-key">E</span>
+                <small>{copy.world.interact}</small>
+              </button>
+            </div>
+            <p className="world-touch-hint">
+              {nearby
+                ? `${copy.world.open}: ${copy.world.stations[nearby]}`
+                : copy.world.tapHint}
+            </p>
+          </>
+        ) : (
+          <div className="game-menu-layer">
+            {screen === "title" ? (
+              <section className="login-panel" aria-labelledby="welcome-title">
+                <div className="game-wordmark" aria-hidden="true">
+                  <span>BLOCK</span>
+                  <strong>WORLD</strong>
+                </div>
+                <p className="login-version">
+                  {copy.playerName} <span>·</span> PORTFOLIO EDITION
+                </p>
+                <p className="login-profile">{copy.playerSubtitle}</p>
+                <h1 id="welcome-title">{copy.welcome.title}</h1>
+                <p className="login-subtitle">{copy.welcome.subtitle}</p>
+                <div className="login-divider">
+                  <span />
+                  <i />
+                  <span />
+                </div>
+                <button
+                  className="login-play-button"
+                  type="button"
+                  onClick={() => setScreen("game")}
+                >
+                  <span>{copy.welcome.play}</span>
+                  <i aria-hidden="true" />
+                </button>
+                <button
+                  className="login-controls-button"
+                  type="button"
+                  onClick={() => setScreen("controls")}
+                >
+                  {copy.welcome.controls}
+                </button>
+                <p className="login-footnote">{copy.welcome.menuFooter}</p>
+              </section>
+            ) : (
+              <section
+                className="controls-panel"
+                aria-labelledby="controls-title"
+              >
+                <div className="controls-panel-head">
+                  <span>WORLD GUIDE / 01</span>
+                  <span className="pixel-status" />
+                </div>
+                <h1 id="controls-title">{copy.welcome.controls}</h1>
+                <p>{copy.welcome.objective}</p>
+                <div className="controls-columns">
+                  <div className="controls-column">
+                    <h2>{copy.welcome.keyboardTitle}</h2>
+                    <div className="control-row">
+                      <span className="key-cluster">
+                        <kbd>W</kbd>
+                        <kbd>A</kbd>
+                        <kbd>S</kbd>
+                        <kbd>D</kbd>
+                      </span>
+                      <span>{copy.world.move}</span>
+                    </div>
+                    <div className="control-row">
+                      <kbd>E</kbd>
+                      <span>{copy.world.interact}</span>
+                    </div>
+                    <div className="control-row">
+                      <kbd>ESC</kbd>
+                      <span>{copy.welcome.returnToTitle}</span>
+                    </div>
+                  </div>
+                  <div className="controls-column touch-instructions">
+                    <h2>{copy.welcome.mobileTitle}</h2>
+                    <div className="control-row">
+                      <span className="control-symbol joystick-symbol" />
+                      <span>{copy.world.move}</span>
+                    </div>
+                    <div className="control-row">
+                      <span className="control-symbol action-symbol">E</span>
+                      <span>{copy.world.interact}</span>
+                    </div>
+                    <div className="control-row">
+                      <span className="control-symbol tap-symbol" />
+                      <span>{copy.world.tapHint}</span>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  className="login-play-button controls-back-button"
+                  type="button"
+                  onClick={() => setScreen("title")}
+                >
+                  <span>{copy.welcome.back}</span>
+                  <i aria-hidden="true" />
+                </button>
+              </section>
+            )}
           </div>
-          <div className="minimap-art">
-            <div className="mini-diamond" />
-            {STATIONS.map((station) => (
-              <span
-                key={station.id}
-                className={`mini-station mini-${station.id}`}
-              />
-            ))}
-            <span
-              className="mini-player"
-              style={{
-                left: `${50 + (playerPosition.x - playerPosition.y) * 5}%`,
-                top: `${48 + (playerPosition.x + playerPosition.y - 8) * 2.5}%`,
-              }}
-            />
-          </div>
-        </div>
-        <div className="scene-status">
-          <span className="status-pulse" />
-          {visited.length === 4
-            ? copy.world.completed
-            : `${visited.length} / 4 ${copy.world.discovered}`}
-        </div>
+        )}
       </div>
-      <div className="bottom-ui">
-        <div className="control-hint">
-          <span className="keycap">W</span>
-          <span className="keycap">A</span>
-          <span className="keycap">S</span>
-          <span className="keycap">D</span>
-          <span className="hint-copy">{copy.world.move}</span>
-          <span className="hint-divider" />
-          <span className="keycap wide">E</span>
-          <span className="hint-copy">{copy.world.interact}</span>
-        </div>
-        <div className="hotbar" aria-label={copy.world.title}>
-          {STATIONS.map((station, index) => (
-            <button
-              key={station.id}
-              type="button"
-              className={`hotbar-slot ${activeStation === station.id ? "selected" : ""}`}
-              onClick={() => openStation(station.id)}
-              title={copy.world.stations[station.id]}
-              aria-label={`${copy.world.open} ${copy.world.stations[station.id]}`}
-            >
-              <span className="slot-number">{index + 1}</span>
-              <span className={`slot-icon ${station.id}`}>
-                {copy.world.stations[station.id][0]}
-              </span>
-              {visited.includes(station.id) && (
-                <span className="slot-visited" />
-              )}
-            </button>
-          ))}
-        </div>
-        <div className="player-chip">
-          <span className="player-avatar">D</span>
-          <span>
-            <strong>DANILO</strong>
-            <small>{copy.world.playerRole}</small>
-          </span>
-        </div>
-      </div>
-      <div className="mobile-controls" aria-label={copy.world.move}>
-        <div className="dpad">
-          <button
-            type="button"
-            aria-label={copy.world.directions.up}
-            onClick={() => moveTouch("up")}
-          >
-            <span className="dpad-arrow up" />
-          </button>
-          <div>
-            <button
-              type="button"
-              aria-label={copy.world.directions.left}
-              onClick={() => moveTouch("left")}
-            >
-              <span className="dpad-arrow left" />
-            </button>
-            <button
-              type="button"
-              aria-label={copy.world.directions.down}
-              onClick={() => moveTouch("down")}
-            >
-              <span className="dpad-arrow down" />
-            </button>
-            <button
-              type="button"
-              aria-label={copy.world.directions.right}
-              onClick={() => moveTouch("right")}
-            >
-              <span className="dpad-arrow right" />
-            </button>
-          </div>
-        </div>
-        <button
-          type="button"
-          className="interact-touch"
-          onClick={interactTouch}
-          aria-label={copy.world.interact}
-        >
-          E
-        </button>
-      </div>
-      <div className="hero-footnote">{copy.world.touchHelp}</div>
       <WorldDialog
         stationId={activeStation}
-        helpOpen={helpOpen}
+        helpOpen={false}
         copy={copy}
         onClose={closeDialog}
       />
