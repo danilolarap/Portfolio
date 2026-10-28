@@ -5,7 +5,7 @@ export default function Footer({ copy }: { copy: PortfolioContent }) {
     <footer className="site-footer">
       <div className="section-container footer-inner">
         <div>
-          <strong>DANILO.DEV</strong>
+          <strong>PORTFOLIO</strong>
           <p>{copy.footer.builtWith} / 2026</p>
         </div>
         <a href="#home">{copy.footer.backToTop}</a>

@@ -21,7 +21,6 @@ export const navigationIds = [
 export interface PortfolioContent {
   playerName: string;
   playerSubtitle: string;
-  brandTagline: string;
   navigation: Record<(typeof navigationIds)[number], string>;
   menuOpen: string;
   menuClose: string;
@@ -137,7 +136,6 @@ export const content: Record<Language, PortfolioContent> = {
     playerName: "Danilo Lara",
     playerSubtitle:
       "Desarrollador de software · Estudiante de Ingeniería de Software",
-    brandTagline: "UN MUNDO POR EXPLORAR",
     navigation: {
       home: "Inicio",
       about: "Sobre mí",
@@ -161,7 +159,7 @@ export const content: Record<Language, PortfolioContent> = {
       cvNote: "La hoja de vida se añadirá con los datos definitivos.",
     },
     welcome: {
-      title: "PORTAFOLIO WORLD",
+      title: "PORTAFOLIO INTERACTIVO",
       subtitle: "Un mundo construido bloque a bloque",
       play: "Jugar",
       controls: "Controles",
@@ -349,7 +347,6 @@ export const content: Record<Language, PortfolioContent> = {
   en: {
     playerName: "Danilo Lara",
     playerSubtitle: "Software developer · Software Engineering student",
-    brandTagline: "A WORLD TO EXPLORE",
     navigation: {
       home: "Home",
       about: "About",
@@ -373,7 +370,7 @@ export const content: Record<Language, PortfolioContent> = {
       cvNote: "The resume will be added with the final personal details.",
     },
     welcome: {
-      title: "PORTFOLIO WORLD",
+      title: "INTERACTIVE PORTFOLIO",
       subtitle: "A world built block by block",
       play: "Play",
       controls: "Controls",

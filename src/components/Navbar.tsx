@@ -27,17 +27,12 @@ export default function Navbar({
           className="brand-lockup"
           href="#home"
           onClick={() => setMenuOpen(false)}
-          aria-label="Danilo.dev"
+          aria-label="Portfolio"
         >
           <span className="brand-cube" aria-hidden="true">
             <span />
           </span>
-          <span>
-            <span className="brand-name">
-              DANILO<span className="brand-dot">.</span>DEV
-            </span>
-            <span className="brand-caption">{copy.brandTagline}</span>
-          </span>
+          <span className="brand-name">PORTFOLIO</span>
         </a>
         <nav
           className={`site-links ${menuOpen ? "is-open" : ""}`}

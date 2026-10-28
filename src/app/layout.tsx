@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Danilo.dev | Un mundo por explorar",
+  title: "Portfolio | Minefolio",
   description:
     "Portafolio interactivo de Danilo con un mundo isométrico de bloques.",
 };

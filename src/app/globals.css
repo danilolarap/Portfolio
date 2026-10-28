@@ -134,15 +134,6 @@ button:focus-visible,
   color: #e8f7e9;
   text-shadow: 2px 2px #244b50;
 }
-.brand-dot {
-  color: #79e0bd;
-}
-.brand-caption {
-  font-size: 9px;
-  letter-spacing: 0.21em;
-  color: #8bb3ad;
-  margin-top: 7px;
-}
 .top-actions {
   display: flex;
   align-items: center;
@@ -896,9 +887,6 @@ button:focus-visible,
   .brand-name {
     font-size: 15px;
   }
-  .brand-caption {
-    font-size: 7px;
-  }
   .brand-cube {
     width: 29px;
     height: 29px;
@@ -1065,8 +1053,7 @@ section[id] {
   color: inherit;
   flex: none;
 }
-.site-nav .brand-name,
-.site-nav .brand-caption {
+.site-nav .brand-name {
   display: block;
 }
 .site-links {
@@ -2000,9 +1987,6 @@ section[id] {
   .site-nav .brand-name {
     font-size: 15px;
   }
-  .site-nav .brand-caption {
-    font-size: 7px;
-  }
   .hero-section .intro {
     padding-top: 30px;
   }
@@ -2395,14 +2379,6 @@ section[id] {
     3px 3px #2c4f39,
     6px 6px #111f24;
   transform: skewY(-3deg);
-}
-.game-wordmark span {
-  padding: 3px 14px 1px;
-  color: #f0cf7d;
-  background: #4c7249;
-  font-size: 0.43em;
-  letter-spacing: 0.25em;
-  text-shadow: 1px 2px #24372f;
 }
 .game-wordmark strong {
   font: inherit;

@@ -139,7 +139,7 @@ export default function WorldDialog({
           </button>
         </div>
         <div className="panel-content">
-          <span className="panel-kicker">DANILO.DEV / WORLD 01</span>
+          <span className="panel-kicker">MINEFOLIO / WORLD 01</span>
           <h2 id="world-dialog-title">{title}</h2>
           <p className="panel-description">
             {stationId

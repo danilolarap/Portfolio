@@ -194,9 +194,8 @@ export default function Hero({ copy }: { copy: PortfolioContent }) {
           <div className="game-menu-layer">
             {screen === "title" ? (
               <section className="login-panel" aria-labelledby="welcome-title">
-                <div className="game-wordmark" aria-hidden="true">
-                  <span>BLOCK</span>
-                  <strong>WORLD</strong>
+                <div className="game-wordmark">
+                  <strong>MINEFOLIO</strong>
                 </div>
                 <p className="login-version">
                   {copy.playerName} <span>·</span> PORTFOLIO EDITION
