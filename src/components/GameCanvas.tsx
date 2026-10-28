@@ -1,0 +1,804 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
+import type { PortfolioContent, StationId } from "@/data/content";
+
+export interface Point {
+  x: number;
+  y: number;
+}
+interface StationConfig extends Point {
+  id: StationId;
+  color: string;
+  dark: string;
+  glow: string;
+}
+interface GameCanvasProps {
+  onInteract: (id: StationId) => void;
+  paused: boolean;
+  playerPosition: Point;
+  onPlayerPosition: Dispatch<SetStateAction<Point>>;
+  visited: StationId[];
+  world: PortfolioContent["world"];
+}
+
+export const STATIONS: StationConfig[] = [
+  {
+    id: "projects",
+    x: 1.65,
+    y: 5.1,
+    color: "#55d9d4",
+    dark: "#157d89",
+    glow: "#64eee7",
+  },
+  {
+    id: "skills",
+    x: 2.25,
+    y: 1.25,
+    color: "#ba96f7",
+    dark: "#7054ad",
+    glow: "#c9a4ff",
+  },
+  {
+    id: "about",
+    x: 6.1,
+    y: 1.65,
+    color: "#f5c67b",
+    dark: "#aa7543",
+    glow: "#ffdc9a",
+  },
+  {
+    id: "contact",
+    x: 6.3,
+    y: 6.3,
+    color: "#ff8b79",
+    dark: "#ac514d",
+    glow: "#ffa18b",
+  },
+];
+
+const iso = (x: number, y: number, z = 0): Point => ({
+  x: 600 + (x - y) * 49,
+  y: 145 + (x + y) * 25 - z,
+});
+const points = (...coords: Point[]): string =>
+  coords.map((point) => `${point.x},${point.y}`).join(" ");
+const palette = {
+  stoneTop: "#b8c9c9",
+  stoneFront: "#7c999c",
+  stoneRight: "#67858b",
+};
+
+function Cube({
+  x,
+  y,
+  size = 0.7,
+  height = 24,
+  top = palette.stoneTop,
+  left = palette.stoneFront,
+  right = palette.stoneRight,
+  detail = true,
+}: {
+  x: number;
+  y: number;
+  size?: number;
+  height?: number;
+  top?: string;
+  left?: string;
+  right?: string;
+  detail?: boolean;
+}) {
+  const a = iso(x, y, height),
+    b = iso(x + size, y, height),
+    c = iso(x + size, y + size, height),
+    d = iso(x, y + size, height);
+  const b0 = iso(x + size, y),
+    c0 = iso(x + size, y + size),
+    d0 = iso(x, y + size);
+  return (
+    <g className="voxel-cube">
+      <polygon points={points(d, c, c0, d0)} fill={left} />
+      <polygon points={points(b, c, c0, b0)} fill={right} />
+      <polygon
+        points={points(a, b, c, d)}
+        fill={top}
+        stroke="rgba(10,38,47,.27)"
+        strokeWidth="1.6"
+      />
+      {detail && (
+        <>
+          <path
+            d={`M ${d.x + 8} ${d.y + 6} l 6 3 m 9 -3 l 7 3`}
+            stroke="rgba(25,65,69,.24)"
+            strokeWidth="2"
+            fill="none"
+          />
+          <path
+            d={`M ${b.x + 3} ${b.y + 12} l 0 5`}
+            stroke="rgba(255,255,255,.22)"
+            strokeWidth="2"
+          />
+        </>
+      )}
+    </g>
+  );
+}
+
+function Station({
+  station,
+  label,
+  openLabel,
+  near,
+  visited,
+  onClick,
+}: {
+  station: StationConfig;
+  label: string;
+  openLabel: string;
+  near: boolean;
+  visited: boolean;
+  onClick: () => void;
+}) {
+  const p = iso(station.x, station.y);
+  return (
+    <g
+      className={`station station-${station.id} ${near ? "station-near" : ""}`}
+      transform={`translate(${p.x} ${p.y})`}
+      onClick={onClick}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onClick();
+        }
+      }}
+      tabIndex={0}
+      role="button"
+      aria-label={`${openLabel} ${label}`}
+    >
+      <ellipse cy="23" rx="93" ry="35" fill="#0b2a30" opacity=".24" />
+      <polygon
+        points="-75,3 0,-34 75,3 0,41"
+        fill={station.dark}
+        stroke="#203d46"
+        strokeWidth="4"
+      />
+      <polygon
+        points="-75,3 0,41 0,62 -75,24"
+        fill="#314f59"
+        stroke="#203d46"
+        strokeWidth="3"
+      />
+      <polygon
+        points="0,41 75,3 75,24 0,62"
+        fill="#24424d"
+        stroke="#203d46"
+        strokeWidth="3"
+      />
+      <polygon
+        points="-62,1 0,-28 62,1 0,32"
+        fill={station.color}
+        opacity=".24"
+      />
+      <path
+        d="M -48 -12 L -48 -93 L 28 -93 L 28 -12"
+        fill="#27434f"
+        stroke="#17343f"
+        strokeWidth="7"
+        strokeLinejoin="miter"
+      />
+      <path
+        d="M -42 -86 L 22 -86 L 22 -35 L -42 -35 Z"
+        fill="#17313b"
+        stroke={station.color}
+        strokeWidth="4"
+      />
+      <path
+        d="M -38 -82 L 18 -82 L 18 -39 L -38 -39 Z"
+        fill={station.color}
+        opacity=".12"
+      />
+      <path
+        d="M -30 -67 H 9 M -30 -58 H 1 M -30 -49 H 13"
+        stroke={station.color}
+        strokeWidth="4"
+        opacity=".8"
+      />
+      <rect
+        x="-54"
+        y="-112"
+        width="89"
+        height="22"
+        fill="#1a333c"
+        stroke={station.dark}
+        strokeWidth="4"
+      />
+      <text
+        x="-9"
+        y="-97"
+        className="svg-sign"
+        textAnchor="middle"
+        fill="#e9fffa"
+      >
+        {label}
+      </text>
+      <path
+        d="M 31 -57 l 20 10 v 37 l -20 -10 Z"
+        fill={station.dark}
+        stroke="#203a42"
+        strokeWidth="4"
+      />
+      <path
+        d="M 35 -48 l 11 5 v 22 l -11 -5 Z"
+        fill={station.color}
+        opacity=".76"
+      />
+      <polygon
+        points="-26,9 10,-8 39,6 4,24"
+        fill="#d5e2d9"
+        stroke="#344f56"
+        strokeWidth="4"
+      />
+      <polygon
+        points="-26,9 4,24 4,40 -26,25"
+        fill="#66858b"
+        stroke="#344f56"
+        strokeWidth="3"
+      />
+      <polygon
+        points="4,24 39,6 39,23 4,40"
+        fill="#54717a"
+        stroke="#344f56"
+        strokeWidth="3"
+      />
+      {station.id === "projects" && (
+        <>
+          <polygon
+            points="-15,7 0,-1 15,7 0,15"
+            fill="#63e1dd"
+            stroke="#286f79"
+            strokeWidth="2"
+          />
+          <path d="M 0 15 v 11 M 15 7 v 11" stroke="#286f79" strokeWidth="3" />
+          <rect x="23" y="4" width="8" height="7" fill="#ddf8ee" />
+        </>
+      )}
+      {station.id === "skills" && (
+        <>
+          <path
+            d="M -8 6 L -2 -13 L 6 6 L 0 17 Z"
+            fill="#c7a6ff"
+            stroke="#69499c"
+            strokeWidth="3"
+          />
+          <path
+            d="M 0 -13 v -9 M -16 -4 l -7 -5 M 14 -4 l 7 -5"
+            stroke="#d9b8ff"
+            strokeWidth="3"
+          />
+        </>
+      )}
+      {station.id === "about" && (
+        <>
+          <path
+            d="M -17 4 l 17 -8 l 18 8 v 18 l -18 -7 l -17 7 Z"
+            fill="#f9dda7"
+            stroke="#9a6846"
+            strokeWidth="3"
+          />
+          <path d="M 0 -4 v 19" stroke="#9a6846" strokeWidth="2" />
+        </>
+      )}
+      {station.id === "contact" && (
+        <>
+          <rect
+            x="-14"
+            y="-3"
+            width="29"
+            height="20"
+            fill="#f3b1a1"
+            stroke="#9e5851"
+            strokeWidth="3"
+          />
+          <path
+            d="M -13 -1 L 0 10 L 14 -1"
+            fill="none"
+            stroke="#9e5851"
+            strokeWidth="2"
+          />
+        </>
+      )}
+      <rect
+        x="-50"
+        y="49"
+        width="100"
+        height="25"
+        rx="2"
+        fill="#17323b"
+        stroke={station.dark}
+        strokeWidth="3"
+      />
+      <text
+        x="0"
+        y="66"
+        textAnchor="middle"
+        className="svg-station-label"
+        fill="#f4fbef"
+      >
+        {label}
+      </text>
+      {visited && (
+        <path
+          d="M 55 57 l 4 4 l 7 -9"
+          fill="none"
+          stroke={station.glow}
+          strokeWidth="3"
+        />
+      )}
+      {near && (
+        <g className="near-prompt">
+          <rect
+            x="-43"
+            y="-151"
+            width="86"
+            height="27"
+            fill="#d9f7cd"
+            stroke="#3e635c"
+            strokeWidth="3"
+          />
+          <text x="0" y="-133" textAnchor="middle" className="svg-prompt">
+            [ E ] {openLabel}
+          </text>
+        </g>
+      )}
+      <rect x="-76" y="-115" width="153" height="192" fill="transparent" />
+    </g>
+  );
+}
+
+function Player({ position, moving }: { position: Point; moving: boolean }) {
+  const p = iso(position.x, position.y);
+  return (
+    <g
+      transform={`translate(${p.x} ${p.y})`}
+      className={moving ? "player-moving" : "player-idle"}
+    >
+      <ellipse cy="7" rx="25" ry="10" fill="#0d3036" opacity=".32" />
+      <path d="M -12 -19 l 12 -5 l 12 5 l -12 6 Z" fill="#2d5c7b" />
+      <path d="M -12 -18 l 12 5 v 25 l -12 -6 Z" fill="#183b63" />
+      <path d="M 0 -13 l 12 -5 v 24 l -12 6 Z" fill="#244e78" />
+      <path
+        d="M -17 -40 l 17 -8 l 17 8 l -17 9 Z"
+        fill="#56d4d1"
+        stroke="#173b45"
+        strokeWidth="2"
+      />
+      <path
+        d="M -17 -40 l 17 9 v 20 l -17 -8 Z"
+        fill="#248f9e"
+        stroke="#173b45"
+        strokeWidth="2"
+      />
+      <path
+        d="M 0 -31 l 17 -9 v 21 l -17 8 Z"
+        fill="#36abb4"
+        stroke="#173b45"
+        strokeWidth="2"
+      />
+      <path
+        d="M -19 -38 l -8 3 v 21 l 8 4 l 5 -4 v -19 Z"
+        fill="#327b8b"
+        stroke="#173b45"
+        strokeWidth="2"
+      />
+      <path
+        d="M 18 -38 l 8 4 v 21 l -8 4 l -5 -5 v -19 Z"
+        fill="#327b8b"
+        stroke="#173b45"
+        strokeWidth="2"
+      />
+      <path
+        d="M -18 -64 l 18 -9 l 18 9 l -18 9 Z"
+        fill="#39536a"
+        stroke="#17333d"
+        strokeWidth="3"
+      />
+      <path
+        d="M -18 -64 l 18 9 v 24 l -18 -9 Z"
+        fill="#e5b18e"
+        stroke="#17333d"
+        strokeWidth="3"
+      />
+      <path
+        d="M 0 -55 l 18 -9 v 24 l -18 9 Z"
+        fill="#efc29e"
+        stroke="#17333d"
+        strokeWidth="3"
+      />
+      <path d="M -18 -64 l 18 -9 l 18 9 l -18 6 l -18 -5 Z" fill="#263b4b" />
+      <path
+        d="M -18 -64 v 8 l 9 4 v -8 M 18 -64 v 8 l -9 4 v -8"
+        fill="#263b4b"
+      />
+      <rect x="4" y="-49" width="4" height="4" fill="#1b3440" />
+      <rect x="13" y="-53" width="3" height="4" fill="#1b3440" />
+      <rect
+        x="-26"
+        y="-95"
+        width="52"
+        height="17"
+        rx="2"
+        fill="#183640"
+        opacity=".92"
+      />
+      <text
+        x="0"
+        y="-83"
+        className="svg-player-name"
+        textAnchor="middle"
+        fill="#e9fff4"
+      >
+        DANILO
+      </text>
+    </g>
+  );
+}
+
+function Sprout({
+  x,
+  y,
+  color = "#3d997e",
+}: {
+  x: number;
+  y: number;
+  color?: string;
+}) {
+  const p = iso(x, y);
+  return (
+    <g transform={`translate(${p.x} ${p.y})`}>
+      <ellipse rx="14" ry="6" fill="#597a73" opacity=".3" />
+      <path d="M 0 0 v -22" stroke="#276b65" strokeWidth="4" />
+      <path
+        d="M 0 -16 l -10 -10 l -5 4 l 7 10 Z"
+        fill={color}
+        stroke="#2c695f"
+        strokeWidth="2"
+      />
+      <path
+        d="M 0 -20 l 11 -12 l 5 4 l -8 13 Z"
+        fill="#62b98e"
+        stroke="#2c695f"
+        strokeWidth="2"
+      />
+    </g>
+  );
+}
+
+export default function GameCanvas({
+  onInteract,
+  paused,
+  playerPosition,
+  onPlayerPosition,
+  visited,
+  world,
+}: GameCanvasProps) {
+  const keys = useRef(new Set<string>());
+  const positionRef = useRef(playerPosition);
+  const [moving, setMoving] = useState(false);
+  useEffect(() => {
+    positionRef.current = playerPosition;
+  }, [playerPosition]);
+
+  const near = STATIONS.reduce<{ id: StationId | null; distance: number }>(
+    (best, station) => {
+      const distance = Math.hypot(
+        playerPosition.x - station.x,
+        playerPosition.y - station.y,
+      );
+      return distance < best.distance ? { id: station.id, distance } : best;
+    },
+    { id: null, distance: Infinity },
+  );
+  const nearId = near.distance < 1.75 ? near.id : null;
+
+  useEffect(() => {
+    const keyDown = (event: KeyboardEvent) => {
+      if (
+        !paused &&
+        [
+          "w",
+          "a",
+          "s",
+          "d",
+          "ArrowUp",
+          "ArrowDown",
+          "ArrowLeft",
+          "ArrowRight",
+        ].includes(event.key)
+      ) {
+        keys.current.add(event.key);
+        if (event.key.startsWith("Arrow")) event.preventDefault();
+      }
+      if (!paused && (event.key === "e" || event.key === "E")) {
+        const p = positionRef.current;
+        const station = STATIONS.find(
+          (item) => Math.hypot(p.x - item.x, p.y - item.y) < 1.75,
+        );
+        if (station) onInteract(station.id);
+      }
+    };
+    const keyUp = (event: KeyboardEvent) => keys.current.delete(event.key);
+    const blur = () => keys.current.clear();
+    window.addEventListener("keydown", keyDown);
+    window.addEventListener("keyup", keyUp);
+    window.addEventListener("blur", blur);
+    const interval = window.setInterval(() => {
+      if (paused) {
+        setMoving(false);
+        return;
+      }
+      const held = keys.current;
+      const horizontal =
+        Number(held.has("d") || held.has("ArrowRight")) -
+        Number(held.has("a") || held.has("ArrowLeft"));
+      const vertical =
+        Number(held.has("s") || held.has("ArrowDown")) -
+        Number(held.has("w") || held.has("ArrowUp"));
+      if (!horizontal && !vertical) {
+        setMoving(false);
+        return;
+      }
+      setMoving(true);
+      const normal = horizontal && vertical ? Math.SQRT1_2 : 1;
+      const p = positionRef.current;
+      const next = {
+        x: Math.max(
+          0.6,
+          Math.min(7.4, p.x + (vertical * 0.075 + horizontal * 0.04) * normal),
+        ),
+        y: Math.max(
+          0.6,
+          Math.min(7.4, p.y + (vertical * 0.075 - horizontal * 0.04) * normal),
+        ),
+      };
+      positionRef.current = next;
+      onPlayerPosition(next);
+    }, 25);
+    return () => {
+      window.clearInterval(interval);
+      window.removeEventListener("keydown", keyDown);
+      window.removeEventListener("keyup", keyUp);
+      window.removeEventListener("blur", blur);
+    };
+  }, [onInteract, onPlayerPosition, paused]);
+
+  const floorTiles: React.ReactNode[] = [];
+  for (let x = 0; x < 8; x++)
+    for (let y = 0; y < 8; y++) {
+      const a = iso(x, y),
+        b = iso(x + 1, y),
+        c = iso(x + 1, y + 1),
+        d = iso(x, y + 1);
+      const color =
+        (x + y) % 4 === 0
+          ? "#c7d5d0"
+          : (x * 3 + y) % 5 === 0
+            ? "#b0c6c0"
+            : "#bccfc8";
+      floorTiles.push(
+        <polygon
+          key={`${x}-${y}`}
+          points={points(a, b, c, d)}
+          fill={color}
+          stroke="#a3bcb5"
+          strokeWidth="1.2"
+        />,
+      );
+    }
+
+  const entities = [
+    {
+      y: 2.2,
+      node: (
+        <Cube
+          key="stone1"
+          x={1.2}
+          y={1}
+          size={0.54}
+          height={22}
+          top="#9eb7b4"
+          left="#668889"
+          right="#557a80"
+        />
+      ),
+    },
+    { y: 3.7, node: <Sprout key="sprout1" x={0.7} y={3} /> },
+    {
+      y: 6.2,
+      node: (
+        <Cube
+          key="ore1"
+          x={0.55}
+          y={5.7}
+          size={0.48}
+          height={15}
+          top="#8dd3ce"
+          left="#4d888d"
+          right="#386b75"
+        />
+      ),
+    },
+    { y: 5.1, node: <Sprout key="sprout2" x={3.1} y={4.4} color="#5cb798" /> },
+    {
+      y: 1.9,
+      node: (
+        <Cube
+          key="stone2"
+          x={5.9}
+          y={0.7}
+          size={0.54}
+          height={22}
+          top="#a6c0bc"
+          left="#668889"
+          right="#557a80"
+        />
+      ),
+    },
+    {
+      y: 3.8,
+      node: <Sprout key="sprout3" x={7.15} y={3.15} color="#5da891" />,
+    },
+    {
+      y: 7.4,
+      node: (
+        <Cube
+          key="ore2"
+          x={3.35}
+          y={6.9}
+          size={0.45}
+          height={13}
+          top="#f1d293"
+          left="#a48665"
+          right="#8f6e59"
+        />
+      ),
+    },
+    ...STATIONS.map((station) => ({
+      y: station.x + station.y,
+      node: (
+        <Station
+          key={station.id}
+          station={station}
+          label={world.stations[station.id]}
+          openLabel={world.open}
+          near={nearId === station.id}
+          visited={visited.includes(station.id)}
+          onClick={() => onInteract(station.id)}
+        />
+      ),
+    })),
+    {
+      y: playerPosition.x + playerPosition.y,
+      node: <Player key="player" position={playerPosition} moving={moving} />,
+    },
+  ].sort((a, b) => a.y - b.y);
+
+  return (
+    <svg
+      className="game-world"
+      viewBox="0 30 1200 565"
+      role="group"
+      aria-label={world.title}
+    >
+      <defs>
+        <pattern
+          id="world-grid"
+          width="28"
+          height="28"
+          patternUnits="userSpaceOnUse"
+        >
+          <path
+            d="M 28 0 H 0 V 28"
+            fill="none"
+            stroke="#417079"
+            strokeWidth="1"
+            opacity=".17"
+          />
+        </pattern>
+        <radialGradient id="world-glow">
+          <stop offset="0" stopColor="#3b7778" stopOpacity=".45" />
+          <stop offset="1" stopColor="#173a44" stopOpacity="0" />
+        </radialGradient>
+        <filter id="soft-glow">
+          <feGaussianBlur stdDeviation="9" />
+        </filter>
+      </defs>
+      <rect width="1200" height="700" fill="#102e39" />
+      <rect width="1200" height="700" fill="url(#world-grid)" />
+      <ellipse cx="600" cy="372" rx="485" ry="310" fill="url(#world-glow)" />
+      <g className="floating-specks" fill="#74c9c3" opacity=".45">
+        <rect x="145" y="125" width="4" height="4" />
+        <rect x="1040" y="190" width="3" height="3" />
+        <rect x="922" y="586" width="4" height="4" />
+        <rect x="224" y="572" width="3" height="3" />
+        <rect x="352" y="120" width="2" height="2" />
+        <rect x="845" y="100" width="3" height="3" />
+      </g>
+      <ellipse
+        cx="600"
+        cy="442"
+        rx="430"
+        ry="142"
+        fill="#071f27"
+        opacity=".38"
+        filter="url(#soft-glow)"
+      />
+      <polygon
+        points="208,345 600,545 992,345 992,373 600,575 208,373"
+        fill="#416c72"
+        stroke="#274b54"
+        strokeWidth="6"
+      />
+      <polygon
+        points="208,345 600,145 992,345 600,545"
+        fill="#b9cdc6"
+        stroke="#1d4650"
+        strokeWidth="6"
+      />
+      {floorTiles}
+      <polygon
+        points="208,345 600,145 600,66 208,266"
+        fill="#839fa0"
+        stroke="#203e49"
+        strokeWidth="7"
+      />
+      <polygon
+        points="600,145 992,345 992,266 600,66"
+        fill="#759499"
+        stroke="#203e49"
+        strokeWidth="7"
+      />
+      <path
+        d="M 214 269 L 600 74 L 986 269"
+        fill="none"
+        stroke="#d0ddd2"
+        strokeWidth="5"
+        opacity=".75"
+      />
+      <path
+        d="M 242 273 L 242 324 M 289 248 L 289 297 M 337 223 L 337 273 M 386 199 L 386 248 M 435 174 L 435 223 M 484 149 L 484 199 M 533 124 L 533 174 M 670 108 L 670 178 M 740 143 L 740 213 M 810 179 L 810 249 M 880 215 L 880 285 M 950 250 L 950 320"
+        stroke="#54777d"
+        strokeWidth="2"
+        opacity=".5"
+      />
+      <path
+        d="M 208 345 L 600 545 L 992 345"
+        fill="none"
+        stroke="#eff5e9"
+        strokeWidth="4"
+        opacity=".65"
+      />
+      <g className="wall-ornament">
+        <rect
+          x="558"
+          y="78"
+          width="85"
+          height="24"
+          fill="#21424b"
+          stroke="#a4c9c1"
+          strokeWidth="3"
+        />
+        <text
+          x="600"
+          y="94"
+          textAnchor="middle"
+          className="svg-room-title"
+          fill="#e4f6e9"
+        >
+          WORLD 01
+        </text>
+      </g>
+      {entities.map((entity) => entity.node)}
+    </svg>
+  );
+}
