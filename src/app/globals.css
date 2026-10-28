@@ -2475,3 +2475,101 @@ section[id] {
   text-transform: uppercase;
   transform: translateX(-50%);
 }
+@media (max-width: 720px) {
+  .hero-section.game-shell {
+    height: calc(100svh - 62px);
+    min-height: 650px;
+  }
+  .world-stage {
+    min-height: 650px;
+  }
+  .game-hud-top {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    min-height: 45px;
+    gap: 8px;
+    padding: 6px 7px;
+  }
+  .hud-world-title {
+    gap: 6px;
+    font-size: 8px;
+  }
+  .hud-world-title small {
+    display: none;
+  }
+  .hud-progress {
+    display: none;
+  }
+  .hud-menu-button {
+    min-height: 28px;
+    padding: 0 8px;
+    font-size: 8px;
+  }
+  .game-hud-bottom {
+    bottom: 13px;
+    left: 10px;
+    right: 10px;
+    justify-content: center;
+  }
+  .game-player-card,
+  .game-key-hints {
+    display: none;
+  }
+  .game-hotbar {
+    gap: 3px;
+    padding: 4px;
+  }
+  .game-hotbar button {
+    width: 38px;
+    height: 38px;
+  }
+  .touch-game-controls {
+    display: flex;
+    bottom: 70px;
+    padding: 0 21px;
+  }
+  .virtual-joystick {
+    width: 104px;
+    height: 104px;
+  }
+  .joystick-knob {
+    width: 41px;
+    height: 41px;
+  }
+  .touch-action-button {
+    width: 68px;
+    height: 68px;
+  }
+  .world-touch-hint {
+    display: block;
+    bottom: 125px;
+    max-width: 43%;
+    font-size: 7px;
+  }
+  .login-panel,
+  .controls-panel {
+    padding: 25px 22px 20px;
+  }
+  .controls-columns {
+    grid-template-columns: 1fr;
+    gap: 9px;
+    margin-bottom: 14px;
+  }
+  .controls-panel > p {
+    margin-bottom: 14px;
+    font-size: 12px;
+  }
+  .controls-column {
+    padding: 10px 12px;
+  }
+  .controls-column h2 {
+    margin-bottom: 6px;
+  }
+  .control-row {
+    min-height: 28px;
+  }
+  .controls-back-button {
+    min-height: 42px;
+  }
+}
