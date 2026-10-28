@@ -1287,6 +1287,141 @@ section[id] {
 .panel-note {
   margin-bottom: 24px;
 }
+.station-about-content,
+.station-project-list,
+.station-skill-list,
+.station-contact-list {
+  margin: 0 0 22px;
+}
+.station-about-content p {
+  margin: 0;
+  color: #3d5859;
+  font:
+    400 14px/1.6 Arial,
+    sans-serif;
+}
+.station-about-content ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.station-about-content li {
+  padding: 8px 10px;
+  border: 1px solid #91aaa0;
+  color: #365755;
+  background: #c3d2c7;
+  font:
+    700 10px/1.35 Arial,
+    sans-serif;
+}
+.station-project-list {
+  display: grid;
+  gap: 9px;
+}
+.station-project {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 11px 13px;
+  border: 1px solid #91aaa0;
+  background: #c5d2c7;
+  box-shadow:
+    inset 2px 2px #e1e9dd,
+    inset -2px -2px #a6b9ad;
+}
+.station-project-index {
+  color: #597874;
+  font-size: 8px;
+  letter-spacing: 0.14em;
+}
+.station-project h3 {
+  margin: 3px 0 4px;
+  color: #1c3a42;
+  font-size: 14px;
+}
+.station-project p {
+  max-width: 330px;
+  margin: 0;
+  color: #4d6764;
+  font:
+    400 11px/1.4 Arial,
+    sans-serif;
+}
+.station-project-links {
+  display: grid;
+  flex: none;
+  gap: 6px;
+}
+.station-project-links a {
+  min-width: 104px;
+  padding: 7px 9px;
+  border: 1px solid #477c70;
+  color: #f3f4df;
+  background: #387f76;
+  text-align: center;
+  text-decoration: none;
+  font-size: 9px;
+}
+.station-project-links a:hover {
+  background: #28645f;
+}
+.station-skill-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+.station-skill {
+  display: flex;
+  min-height: 58px;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid #a291be;
+  color: #322b45;
+  background: #d0c5df;
+  box-shadow:
+    inset 2px 2px #e9e1ef,
+    inset -2px -2px #b8a9cc;
+}
+.station-skill span {
+  color: #6c5c8a;
+  font-size: 9px;
+}
+.station-skill strong {
+  font:
+    700 12px/1.35 Arial,
+    sans-serif;
+}
+.station-contact-list {
+  display: grid;
+  gap: 10px;
+}
+.station-contact-list a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid #c38678;
+  color: #563c39;
+  background: #ead0c5;
+  text-decoration: none;
+  font:
+    400 12px Arial,
+    sans-serif;
+}
+.station-contact-list a:hover {
+  background: #f2ddd1;
+}
+.station-contact-list strong {
+  color: #4a3434;
+  font-family: var(--mono);
+  font-size: 11px;
+}
 .panel .start-button {
   text-decoration: none;
 }
@@ -1501,7 +1636,42 @@ section[id] {
 }
 .project-body p {
   min-height: 48px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
+}
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.project-repository-link {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  gap: 17px;
+  padding: 0 13px;
+  border: 1px solid #72b6a4;
+  color: #baf0cc;
+  background: #183944;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  transition:
+    background 0.2s,
+    transform 0.2s;
+}
+.project-repository-link:hover {
+  background: #28545a;
+  transform: translateY(-2px);
+}
+.project-production-link {
+  color: #153b35;
+  border-color: #c0e6a5;
+  background: #a9d57e;
+  box-shadow: inset -3px -3px #78a956;
+}
+.project-production-link:hover {
+  background: #c1e698;
 }
 .testimonial-card {
   padding: 24px;
@@ -1548,12 +1718,25 @@ section[id] {
   border-left: 2px solid #4b7d7b;
   padding-left: 32px;
 }
+.experience-groups {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 36px;
+}
+.experience-group-title {
+  margin: 0 0 18px 18px;
+  color: #c4e1ce;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
 .experience-card {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 24px;
-  padding: 23px 26px;
+  gap: 17px;
+  min-height: 92px;
+  padding: 18px 20px;
 }
 .experience-node {
   position: absolute;
@@ -1567,15 +1750,21 @@ section[id] {
 .experience-card > .card-index {
   min-width: 38px;
 }
-.experience-card h3 {
-  margin-top: 0;
+.experience-card h4 {
+  margin: 0 0 7px;
+  color: #e3efe4;
+  font-size: 13px;
 }
-.experience-card .pending-tag {
-  margin-left: auto;
+.experience-card p {
+  margin: 0;
+  color: #9dbcb0;
+  font:
+    13px/1.4 Arial,
+    sans-serif;
 }
 .contact-grid {
   display: grid;
-  grid-template-columns: 1.3fr 0.7fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
 }
 .contact-link {
@@ -1607,6 +1796,36 @@ section[id] {
   height: 20px;
   border: 4px solid #245663;
   transform: rotate(45deg);
+}
+.contact-icon-email {
+  background: #dfbf76;
+  box-shadow: inset -7px -7px #95713c;
+}
+.contact-icon-email span {
+  position: relative;
+  width: 25px;
+  height: 18px;
+  border: 3px solid #59452d;
+  transform: none;
+}
+.contact-icon-email span:after,
+.contact-icon-email span:before {
+  position: absolute;
+  top: 1px;
+  width: 12px;
+  height: 2px;
+  background: #59452d;
+  content: "";
+}
+.contact-icon-email span:before {
+  left: 0;
+  transform: rotate(34deg);
+  transform-origin: left;
+}
+.contact-icon-email span:after {
+  right: 0;
+  transform: rotate(-34deg);
+  transform-origin: right;
 }
 .contact-link strong {
   display: block;
@@ -1826,13 +2045,9 @@ section[id] {
   .contact-grid {
     grid-template-columns: 1fr;
   }
-  .experience-card {
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-  .experience-card .pending-tag {
-    margin-left: 0;
+  .experience-groups {
+    grid-template-columns: 1fr;
+    gap: 30px;
   }
   .footer-inner {
     flex-wrap: wrap;
@@ -2572,6 +2787,27 @@ section[id] {
   }
   .controls-back-button {
     min-height: 42px;
+  }
+  .station-project {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .station-project-links {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .station-project-links a {
+    min-width: 0;
+  }
+  .station-skill-list {
+    grid-template-columns: 1fr;
+  }
+  .station-contact-list a {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+    overflow-wrap: anywhere;
   }
 }
 @media (max-width: 390px) {
