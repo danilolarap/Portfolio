@@ -1146,3 +1146,117 @@ section[id] {
   font-size: 10px;
   letter-spacing: 0.08em;
 }
+.primary-link {
+  color: #123b41;
+  background: #a9e4c4;
+  border: 2px solid #d0f2d6;
+  box-shadow:
+    inset -3px -3px #6ab49e,
+    4px 4px #071d26;
+}
+.primary-link:hover {
+  background: #c3f1d4;
+  transform: translateY(-2px);
+}
+.secondary-link {
+  color: #88a6a4;
+  background: #25424a;
+  border: 2px solid #4c686b;
+  cursor: not-allowed;
+  opacity: 0.78;
+}
+.button-arrow {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  transform: rotate(45deg);
+}
+.cv-note {
+  min-height: 16px;
+  margin-top: 10px !important;
+  color: #789c99 !important;
+  font-size: 11px !important;
+}
+.hero-section .scene-frame {
+  height: clamp(390px, calc(100vh - 465px), 550px);
+}
+.hero-section .scene-topline-right {
+  margin-right: 18px;
+}
+.scene-help {
+  width: 22px;
+  height: 22px;
+  color: #d6efe0;
+  background: #27525b;
+  border: 1px solid #6b9692;
+  line-height: 1;
+}
+.scene-help:hover {
+  background: #3c7474;
+}
+.mini-projects {
+  left: 33%;
+  top: 53%;
+  background: #56dfd9;
+  color: #56dfd9;
+}
+.mini-skills {
+  left: 56%;
+  top: 30%;
+  background: #bba0ef;
+  color: #bba0ef;
+}
+.mini-about {
+  left: 68%;
+  top: 49%;
+  background: #f7d18e;
+  color: #f7d18e;
+}
+.mini-contact {
+  left: 53%;
+  top: 70%;
+  background: #ff9884;
+  color: #ff9884;
+}
+.slot-icon {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  background: #244c55;
+  border: 2px solid currentColor;
+  box-shadow: inset -3px -3px rgba(0, 0, 0, 0.25);
+  font-size: 13px;
+}
+.slot-icon.projects {
+  color: #70e4dd;
+}
+.slot-icon.skills {
+  color: #c6a6ff;
+}
+.slot-icon.about {
+  color: #f4d28e;
+}
+.slot-icon.contact {
+  color: #fa9a88;
+}
+.hero-footnote {
+  position: relative;
+  z-index: 1;
+  max-width: 1450px;
+  margin: 0 auto;
+  color: #668c8d;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-align: center;
+}
+.dpad-arrow {
+  display: block;
+  width: 9px;
+  height: 9px;
+  margin: auto;
+  border-top: 2px solid currentColor;
+  border-left: 2px solid currentColor;
+}
