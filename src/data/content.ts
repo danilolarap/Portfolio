@@ -125,6 +125,9 @@ export interface PortfolioContent {
 
 export const content: Record<Language, PortfolioContent> = {
   es: {
+    playerName: "Danilo Lara",
+    playerSubtitle:
+      "Ingeniero de software · Universidad Cooperativa de Colombia",
     brandTagline: "UN MUNDO POR EXPLORAR",
     navigation: {
       home: "Inicio",
@@ -147,6 +150,21 @@ export const content: Record<Language, PortfolioContent> = {
       explore: "Explorar secciones",
       cvUnavailable: "CV próximamente",
       cvNote: "La hoja de vida se añadirá con los datos definitivos.",
+    },
+    welcome: {
+      title: "PORTAFOLIO WORLD",
+      subtitle: "Un mundo construido bloque a bloque",
+      play: "Jugar",
+      controls: "Controles",
+      back: "Volver",
+      keyboardTitle: "Controles de teclado",
+      mobileTitle: "Controles táctiles",
+      objective:
+        "Recorre el mundo, encuentra las edificaciones y acércate para descubrir cada sección del portafolio.",
+      menuFooter: "UN JUGADOR · MODO EXPLORACIÓN",
+      returnToTitle: "Volver al inicio",
+      joystickLabel: "Joystick virtual para moverte",
+      actionLabel: "Interactuar con la estación cercana",
     },
     world: {
       title: "MUNDO / SALA PRINCIPAL",
@@ -196,6 +214,8 @@ export const content: Record<Language, PortfolioContent> = {
         right: "Derecha",
       },
       start: "Comenzar a explorar",
+      exit: "Menú",
+      tapHint: "Toca una edificación para seleccionarla",
     },
     common: {
       pending: "PRÓXIMAMENTE",
@@ -286,6 +306,8 @@ export const content: Record<Language, PortfolioContent> = {
     },
   },
   en: {
+    playerName: "Danilo Lara",
+    playerSubtitle: "Software Engineer · Universidad Cooperativa de Colombia",
     brandTagline: "A WORLD TO EXPLORE",
     navigation: {
       home: "Home",
@@ -308,6 +330,21 @@ export const content: Record<Language, PortfolioContent> = {
       explore: "Explore sections",
       cvUnavailable: "Resume coming soon",
       cvNote: "The resume will be added with the final personal details.",
+    },
+    welcome: {
+      title: "PORTFOLIO WORLD",
+      subtitle: "A world built block by block",
+      play: "Play",
+      controls: "Controls",
+      back: "Back",
+      keyboardTitle: "Keyboard controls",
+      mobileTitle: "Touch controls",
+      objective:
+        "Explore the world, find the buildings, and approach them to discover each portfolio section.",
+      menuFooter: "SINGLE PLAYER · EXPLORATION MODE",
+      returnToTitle: "Return to title",
+      joystickLabel: "Virtual joystick for movement",
+      actionLabel: "Interact with the nearby station",
     },
     world: {
       title: "WORLD / MAIN ROOM",
@@ -352,6 +389,8 @@ export const content: Record<Language, PortfolioContent> = {
       ],
       directions: { up: "Up", down: "Down", left: "Left", right: "Right" },
       start: "Start exploring",
+      exit: "Menu",
+      tapHint: "Tap a building to select it",
     },
     common: {
       pending: "COMING SOON",
