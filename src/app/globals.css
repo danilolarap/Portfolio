@@ -2394,3 +2394,84 @@ section[id] {
 .controls-back-button {
   width: 100%;
 }
+.touch-game-controls {
+  position: absolute;
+  z-index: 4;
+  inset: auto 0 76px;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 25px;
+  pointer-events: none;
+}
+.virtual-joystick {
+  position: relative;
+  display: grid;
+  width: 116px;
+  height: 116px;
+  place-items: center;
+  border: 1px solid rgba(219, 235, 187, 0.3);
+  border-radius: 50%;
+  background: rgba(18, 37, 36, 0.4);
+  touch-action: none;
+  pointer-events: auto;
+}
+.joystick-ring {
+  position: absolute;
+  inset: 17px;
+  border: 1px dashed rgba(221, 235, 192, 0.37);
+  border-radius: 50%;
+}
+.joystick-knob {
+  position: relative;
+  z-index: 1;
+  width: 45px;
+  height: 45px;
+  border: 2px solid #e0e6c5;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #9caf76, #617b51);
+  box-shadow:
+    inset -5px -5px rgba(24, 47, 36, 0.55),
+    3px 4px rgba(6, 18, 22, 0.55);
+}
+.touch-action-button {
+  display: grid;
+  width: 75px;
+  height: 75px;
+  place-content: center;
+  gap: 2px;
+  border: 2px solid #dfe8c1;
+  border-radius: 50%;
+  color: #f2f2d9;
+  background: linear-gradient(145deg, #8eaa62, #506f49);
+  box-shadow:
+    inset -5px -5px rgba(25, 49, 36, 0.42),
+    4px 5px rgba(6, 18, 22, 0.55);
+  pointer-events: auto;
+}
+.touch-action-button:active {
+  transform: scale(0.95);
+}
+.action-key {
+  font-size: 17px;
+}
+.touch-action-button small {
+  font-size: 7px;
+  letter-spacing: 0.08em;
+}
+.world-touch-hint {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  bottom: 126px;
+  max-width: 55%;
+  margin: 0;
+  padding: 7px 10px;
+  border: 1px solid rgba(191, 212, 164, 0.52);
+  color: #eef0d8;
+  background: rgba(19, 40, 39, 0.86);
+  box-shadow: 2px 2px rgba(7, 20, 24, 0.5);
+  font-size: 8px;
+  text-align: center;
+  text-transform: uppercase;
+  transform: translateX(-50%);
+}
