@@ -1011,3 +1011,138 @@ button:focus-visible,
     font-size: 7px;
   }
 }
+@media (max-width: 430px) {
+  .scene-frame {
+    height: 350px;
+  }
+  .svg-floor-caption {
+    display: none;
+  }
+  .panel-slot-soon {
+    font-size: 6px;
+  }
+  .panel-foot {
+    font-size: 7px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *:before,
+  *:after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+html {
+  scroll-padding-top: 80px;
+}
+body {
+  overflow-x: clip;
+}
+section[id] {
+  scroll-margin-top: 76px;
+}
+
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(8, 30, 39, 0.94);
+  border-bottom: 1px solid #31545d;
+  backdrop-filter: blur(18px);
+}
+.site-nav-inner {
+  width: min(100% - 48px, 1450px);
+  min-height: 72px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.site-nav .brand-lockup {
+  text-decoration: none;
+  color: inherit;
+  flex: none;
+}
+.site-nav .brand-name,
+.site-nav .brand-caption {
+  display: block;
+}
+.site-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.5vw, 26px);
+  flex: 1;
+}
+.site-links a {
+  color: #a9c8bf;
+  text-decoration: none;
+  font:
+    600 11px Arial,
+    sans-serif;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+.site-links a:hover,
+.site-links a:focus-visible {
+  color: #e9f8e9;
+}
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.language-switch {
+  border: 1px solid #527b7d;
+  background: #1a3d47;
+  box-shadow: inset -3px -3px #0b2732;
+  color: #88aaa9;
+  padding: 9px 10px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+.language-switch .active {
+  color: #d4f5db;
+}
+.language-divider {
+  padding: 0 6px;
+  color: #6d9793;
+}
+.language-switch:hover {
+  background: #2e5961;
+}
+.menu-toggle,
+.mobile-nav {
+  display: none;
+}
+
+.hero-section {
+  padding-bottom: 24px;
+}
+.hero-section .intro {
+  padding-top: 37px;
+  padding-bottom: 20px;
+}
+.hero-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  margin-top: 22px;
+}
+.primary-link,
+.secondary-link {
+  min-height: 40px;
+  padding: 0 17px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
