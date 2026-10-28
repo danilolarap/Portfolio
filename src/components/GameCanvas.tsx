@@ -58,29 +58,25 @@ export default function GameCanvas({
   onInteract,
   onNearbyChange,
 }: GameCanvasProps) {
-  const keys = useRef(new Set<string>());
-  const positionRef = useRef(playerPosition);
-  const [moving, setMoving] = useState(false);
-  useEffect(() => {
-    positionRef.current = playerPosition;
-  }, [playerPosition]);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const pointerStartRef = useRef<Point | null>(null);
+  const positionRef = useRef<Point>({ x: 6, y: 6 });
+  const keysRef = useRef(new Set<string>());
+  const touchRef = useRef(touchVector);
+  const nearbyRef = useRef<StationId | null>(null);
+  const lastActionRef = useRef(actionVersion);
+  const callbacksRef = useRef({ onInteract, onNearbyChange });
+  const worldRef = useRef(world);
 
-  const near = STATIONS.reduce<{ id: StationId | null; distance: number }>(
-    (best, station) => {
-      const distance = Math.hypot(
-        playerPosition.x - station.x,
-        playerPosition.y - station.y,
-      );
-      return distance < best.distance ? { id: station.id, distance } : best;
-    },
-    { id: null, distance: Infinity },
-  );
-  const nearId = near.distance < 1.75 ? near.id : null;
+  touchRef.current = touchVector;
+  callbacksRef.current = { onInteract, onNearbyChange };
+  worldRef.current = world;
 
   useEffect(() => {
-    const keyDown = (event: KeyboardEvent) => {
+    if (!active) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      const key = event.key.toLowerCase();
       if (
-        !paused &&
         [
           "w",
           "a",
