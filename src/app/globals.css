@@ -622,3 +622,124 @@ button:focus-visible,
   letter-spacing: 0.18em;
   padding: 0 0 16px;
 }
+.footer span span {
+  color: #b9a777;
+}
+.mobile-controls {
+  display: none;
+}
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 22px;
+  background: rgba(4, 19, 25, 0.8);
+  backdrop-filter: blur(8px);
+}
+.panel {
+  --accent: #7bded7;
+  width: min(100%, 590px);
+  max-height: min(90vh, 760px);
+  overflow: auto;
+  background: #d5ded4;
+  border: 5px solid #557176;
+  box-shadow:
+    0 0 0 5px #18353e,
+    0 26px 70px #031018,
+    inset 3px 3px #f4faec,
+    inset -3px -3px #849d98;
+  color: #193943;
+}
+.panel-cyan {
+  --accent: #4dbeb9;
+}
+.panel-violet {
+  --accent: #a786df;
+}
+.panel-amber {
+  --accent: #d8ac6d;
+}
+.panel-coral {
+  --accent: #e38375;
+}
+.panel-head {
+  height: 58px;
+  background: #173842;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 14px;
+  color: #d3eee0;
+  border-bottom: 4px solid #70938d;
+}
+.panel-label {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+}
+.panel-emblem {
+  width: 31px;
+  height: 31px;
+  display: grid;
+  place-items: center;
+  background: var(--accent);
+  color: #173942;
+  font-size: 19px;
+  box-shadow: inset -4px -4px rgba(0, 0, 0, 0.15);
+}
+.panel-close {
+  width: 29px;
+  height: 29px;
+  color: #eef8ed;
+  background: #aa655e;
+  border: 2px solid #d99d8c;
+  box-shadow: inset -2px -2px #6e3333;
+  font-size: 22px;
+  line-height: 1;
+}
+.panel-close:hover {
+  background: #d47969;
+}
+.panel-content {
+  padding: 30px 33px 25px;
+}
+.panel-kicker {
+  font-size: 9px;
+  letter-spacing: 0.19em;
+  color: #5b7775;
+}
+.panel-kicker span {
+  color: #ba9871;
+  margin: 0 5px;
+}
+.panel h2 {
+  text-transform: uppercase;
+  font-size: clamp(21px, 3vw, 31px);
+  line-height: 1.15;
+  letter-spacing: -0.06em;
+  margin: 14px 0 8px;
+  color: #1c3a42;
+}
+.panel-subtitle {
+  font:
+    400 15px Arial,
+    sans-serif;
+  color: #6b8581;
+  margin: 0;
+}
+.panel-divider {
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent) 0 18%, #a8bbb2 18% 100%);
+  margin: 24px 0;
+}
+.panel-description {
+  font:
+    400 16px/1.55 Arial,
+    sans-serif;
+  color: #3d5859;
+  margin: 0 0 23px;
+}
