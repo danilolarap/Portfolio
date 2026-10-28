@@ -1,13 +1,16 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { PointerEvent } from "react";
 import GameCanvas, { STATIONS, type Point } from "./GameCanvas";
 import WorldDialog from "./WorldDialog";
 import type { PortfolioContent, StationId } from "@/data/content";
 
+type Screen = "title" | "controls" | "game";
+
 export default function Hero({ copy }: { copy: PortfolioContent }) {
+  const [screen, setScreen] = useState<Screen>("title");
   const [activeStation, setActiveStation] = useState<StationId | null>(null);
-  const [helpOpen, setHelpOpen] = useState(false);
   const [visited, setVisited] = useState<StationId[]>([]);
   const [playerPosition, setPlayerPosition] = useState<Point>({
     x: 3.3,
