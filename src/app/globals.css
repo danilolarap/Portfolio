@@ -1904,3 +1904,229 @@ section[id] {
       rgba(8, 18, 23, 0.38) 100%
     );
 }
+.game-hud-top,
+.game-hud-bottom {
+  position: absolute;
+  z-index: 3;
+  left: clamp(14px, 3vw, 42px);
+  right: clamp(14px, 3vw, 42px);
+  display: flex;
+  align-items: center;
+  color: #e9f0d9;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-shadow: 2px 2px #132923;
+}
+.game-hud-top {
+  top: 17px;
+  min-height: 49px;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 8px 12px;
+  border: 2px solid rgba(177, 206, 157, 0.72);
+  background: rgba(17, 39, 44, 0.9);
+  box-shadow:
+    4px 4px 0 rgba(8, 22, 25, 0.6),
+    inset 2px 2px rgba(215, 234, 183, 0.12);
+  font-size: 10px;
+}
+.hud-world-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+.hud-world-title small {
+  padding-left: 9px;
+  border-left: 1px solid rgba(214, 231, 185, 0.4);
+  color: #adc493;
+  font-size: 8px;
+}
+.hud-live-dot,
+.pixel-status {
+  width: 8px;
+  height: 8px;
+  background: #9bdd6e;
+  box-shadow: 0 0 9px #9bdd6e;
+}
+.hud-progress {
+  display: grid;
+  grid-template-columns: auto 94px;
+  align-items: center;
+  gap: 10px;
+  color: #b4caa1;
+  font-size: 8px;
+}
+.hud-progress-track {
+  display: block;
+  height: 8px;
+  border: 1px solid #68835d;
+  background: #172a29;
+}
+.hud-progress-track span {
+  display: block;
+  height: 100%;
+  background: #a4cd67;
+  box-shadow: inset -2px -2px rgba(38, 72, 39, 0.5);
+  transition: width 0.3s;
+}
+.hud-menu-button {
+  min-height: 31px;
+  padding: 0 13px;
+  border: 1px solid #92ad83;
+  color: #e8efdb;
+  background: #3e5e48;
+  box-shadow:
+    inset -3px -3px #2c4636,
+    2px 2px #111f24;
+  font-size: 9px;
+  text-transform: uppercase;
+}
+.hud-menu-button:hover {
+  background: #557b58;
+}
+.game-hud-bottom {
+  bottom: 17px;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 18px;
+  pointer-events: none;
+}
+.game-player-card,
+.game-key-hints,
+.game-hotbar {
+  border: 2px solid rgba(177, 206, 157, 0.68);
+  background: rgba(16, 38, 42, 0.9);
+  box-shadow:
+    4px 4px 0 rgba(8, 22, 25, 0.56),
+    inset 2px 2px rgba(215, 234, 183, 0.1);
+}
+.game-player-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 184px;
+  padding: 9px 12px;
+}
+.game-player-card strong,
+.game-player-card small {
+  display: block;
+  white-space: nowrap;
+}
+.game-player-card strong {
+  color: #edf1db;
+  font-size: 9px;
+}
+.game-player-card small {
+  margin-top: 5px;
+  color: #a6bf91;
+  font-size: 7px;
+}
+.tiny-player {
+  position: relative;
+  display: block;
+  width: 25px;
+  height: 31px;
+  background: linear-gradient(
+    #37648b 0 15%,
+    #d3a070 15% 54%,
+    #27a8ad 54% 78%,
+    #2e4c66 78%
+  );
+  border: 2px solid #d2d8ba;
+  box-shadow: 2px 2px #12242b;
+}
+.tiny-player i {
+  position: absolute;
+  left: 5px;
+  top: 10px;
+  width: 3px;
+  height: 3px;
+  background: #ecf0d9;
+  box-shadow: 8px 0 #ecf0d9;
+}
+.game-key-hints {
+  display: flex;
+  gap: 15px;
+  padding: 8px 10px;
+}
+.game-key-hints > span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.game-key-hints kbd,
+.controls-column kbd {
+  display: inline-grid;
+  place-items: center;
+  width: 21px;
+  height: 21px;
+  border: 1px solid #91a783;
+  color: #edf1d8;
+  background: #354d3f;
+  box-shadow:
+    inset -2px -2px #263a33,
+    1px 1px #101f25;
+  font: 700 9px var(--mono);
+}
+.game-key-hints small {
+  margin-left: 4px;
+  color: #afc29c;
+  font-size: 7px;
+}
+.game-hotbar {
+  display: flex;
+  gap: 4px;
+  padding: 5px;
+  pointer-events: auto;
+}
+.game-hotbar button {
+  position: relative;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid #71856b;
+  background: #263b38;
+  box-shadow:
+    inset -3px -3px #192e2d,
+    inset 2px 2px #4d6351;
+}
+.game-hotbar button:hover {
+  background: #52684b;
+}
+.game-hotbar button small {
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  color: #c7d4b5;
+  font-size: 7px;
+}
+.game-hotbar button > i {
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  width: 5px;
+  height: 5px;
+  background: #b0d881;
+  box-shadow: 0 0 6px #b0d881;
+}
+.hotbar-glyph {
+  display: block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #b8c58d;
+  background: #4c8051;
+  box-shadow:
+    inset -4px -4px rgba(20, 44, 36, 0.6),
+    2px 2px #111f25;
+}
+.glyph-skills {
+  background: #74619a;
+}
+.glyph-about {
+  background: #a78046;
+}
+.glyph-contact {
+  background: #a64f45;
+}
