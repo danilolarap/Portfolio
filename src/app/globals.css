@@ -368,3 +368,133 @@ button:focus-visible,
   clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
   border: 1px solid white;
 }
+.mini-station,
+.mini-player {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  transform: translate(-50%, -50%);
+  border: 1px solid #0b303a;
+  box-shadow: 0 0 5px currentColor;
+}
+.mini-projects {
+  left: 33%;
+  top: 53%;
+  background: #56dfd9;
+  color: #56dfd9;
+}
+.mini-skills {
+  left: 56%;
+  top: 30%;
+  background: #bba0ef;
+  color: #bba0ef;
+}
+.mini-about {
+  left: 68%;
+  top: 49%;
+  background: #f7d18e;
+  color: #f7d18e;
+}
+.mini-contact {
+  left: 53%;
+  top: 70%;
+  background: #ff9884;
+  color: #ff9884;
+}
+.mini-player {
+  width: 6px;
+  height: 6px;
+  background: #e9fff1;
+  color: #e9fff1;
+  z-index: 2;
+}
+.scene-status {
+  position: absolute;
+  z-index: 4;
+  left: 16px;
+  bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: rgba(8, 32, 40, 0.88);
+  border: 1px solid #50747b;
+  color: #b6d7c8;
+  font-size: 9px;
+  letter-spacing: 0.13em;
+}
+.svg-sign,
+.svg-station-label,
+.svg-prompt,
+.svg-player-name,
+.svg-room-title,
+.svg-floor-caption {
+  font-family: var(--mono);
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+.svg-sign {
+  font-size: 9px;
+}
+.svg-station-label {
+  font-size: 11px;
+}
+.svg-prompt {
+  font-size: 11px;
+  fill: #23474a;
+}
+.svg-player-name {
+  font-size: 11px;
+}
+.svg-room-title {
+  font-size: 9px;
+}
+.svg-floor-caption {
+  font-size: 13px;
+  letter-spacing: 3px;
+}
+.station {
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+.station:hover,
+.station:focus-visible,
+.station-near {
+  filter: drop-shadow(0 0 10px rgba(188, 247, 214, 0.48));
+}
+.near-prompt {
+  animation: bob 1.5s ease-in-out infinite;
+}
+.player-idle {
+  animation: playerBob 2.4s ease-in-out infinite;
+}
+.player-moving {
+  animation: playerBob 0.25s ease-in-out infinite;
+}
+.floating-specks {
+  animation: twinkle 4s ease-in-out infinite;
+}
+.bottom-ui {
+  height: 77px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+.control-hint {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 280px;
+}
+.keycap {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  color: #d5eee0;
+  background: #22434b;
+  border: 1px solid #608982;
+  box-shadow: inset -2px -2px #102b33;
+  font-size: 11px;
+}
