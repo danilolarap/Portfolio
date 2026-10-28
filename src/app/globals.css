@@ -2130,3 +2130,7 @@ section[id] {
 .glyph-contact {
   background: #a64f45;
 }
+.touch-game-controls,
+.world-touch-hint {
+  display: none;
+}
