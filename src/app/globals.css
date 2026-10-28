@@ -127,3 +127,118 @@ button:focus-visible,
   height: 5px;
   background: #d9f3cf;
 }
+.brand-name {
+  font-size: 19px;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  color: #e8f7e9;
+  text-shadow: 2px 2px #244b50;
+}
+.brand-dot {
+  color: #79e0bd;
+}
+.brand-caption {
+  font-size: 9px;
+  letter-spacing: 0.21em;
+  color: #8bb3ad;
+  margin-top: 7px;
+}
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.online-indicator {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #a7d5bc;
+  font-size: 10px;
+  letter-spacing: 0.13em;
+  margin-right: 13px;
+}
+.online-indicator span,
+.scene-live-dot,
+.status-pulse {
+  width: 7px;
+  height: 7px;
+  background: #7ee3a5;
+  box-shadow: 0 0 10px #7ee3a5;
+  display: inline-block;
+  animation: pulse 2s ease-in-out infinite;
+}
+.icon-button {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  background: #1b3a43;
+  color: #cde8dc;
+  border: 1px solid #446871;
+  box-shadow:
+    inset 2px 2px #567a7b,
+    inset -2px -2px #0a222d;
+  font-size: 18px;
+}
+.icon-button:hover {
+  background: #2e5961;
+  color: white;
+}
+.sound-button {
+  font-size: 19px;
+}
+.intro {
+  text-align: center;
+  padding: 25px 0 18px;
+}
+.eyebrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 11px;
+  color: #9bceba;
+  font-size: 10px;
+  letter-spacing: 0.24em;
+}
+.eyebrow-line {
+  width: 24px;
+  height: 1px;
+  background: #74b9a8;
+}
+.eyebrow-star {
+  color: #e7c386;
+}
+.intro h1 {
+  font-family: var(--mono);
+  font-size: clamp(31px, 3.7vw, 54px);
+  line-height: 1.04;
+  letter-spacing: -0.065em;
+  text-transform: uppercase;
+  margin: 12px 0 8px;
+  color: #f2f6e9;
+  text-shadow: 3px 3px 0 #2e5a5c;
+}
+.intro h1 span {
+  color: #a6e2c3;
+}
+.intro p {
+  max-width: 670px;
+  margin: 0 auto;
+  color: #a7bfba;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+}
+.scene-frame {
+  height: clamp(400px, calc(100vh - 385px), 575px);
+  background: #102e39;
+  border: 3px solid #4b7780;
+  box-shadow:
+    0 0 0 5px #0a242d,
+    0 0 0 6px #355b63,
+    0 30px 60px rgba(0, 0, 0, 0.28),
+    inset 0 0 80px #061e29;
+  overflow: hidden;
+}
