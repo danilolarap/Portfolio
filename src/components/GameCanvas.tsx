@@ -312,7 +312,10 @@ export default function GameCanvas({
         station.y - WORLD_ORIGIN.y,
         STATION_HEIGHT[station.id] * tile * 0.5 + 8,
       );
-      const signWidth = 84;
+      // Keep the home's smoke and the player at spawn clear of the labels.
+      if (station.id === "about") sign.x -= tile * 0.8;
+      if (station.id === "contact") sign.x += tile * 0.74;
+      const signWidth = Math.max(64, Math.min(84, tile * 1.3));
       context.fillStyle = "#142b29";
       context.fillRect(sign.x - signWidth / 2, sign.y - 7, signWidth, 15);
       context.strokeStyle = "#c4dca2";
@@ -470,7 +473,7 @@ export default function GameCanvas({
           next.y >= 11.55;
         const blockedByStation = STATIONS.some(
           (station) =>
-            Math.hypot(next.x - station.x, next.y - station.y) < 1.02,
+            Math.hypot(next.x - station.x, next.y - station.y) < 1.32,
         );
         if (outsideWorld || blockedByStation)
           velocityRef.current = { x: 0, y: 0 };
