@@ -31,6 +31,13 @@ export default function WorldDialog({
     if (stationId === "about") {
       return (
         <div className="station-about-content">
+          <img
+            className="station-profile-portrait"
+            src="/profile/danilo-lara.jpg"
+            alt={copy.playerName}
+            width={959}
+            height={1280}
+          />
           <p>{copy.about.featureText}</p>
           <ul>
             {copy.about.facts.map((fact) => (
