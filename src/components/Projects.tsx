@@ -1,4 +1,5 @@
 import SectionHeading from "./SectionHeading";
+import ProjectCover from "./ProjectCover";
 import type { PortfolioContent } from "@/data/content";
 
 export default function Projects({ copy }: { copy: PortfolioContent }) {
@@ -6,14 +7,10 @@ export default function Projects({ copy }: { copy: PortfolioContent }) {
     <section id="projects" className="content-section section-projects">
       <div className="section-container">
         <SectionHeading {...copy.projects} />
-        <div className="grid gap-5 md:grid-cols-3">
+        <div className="projects-grid">
           {copy.projects.cards.map((project) => (
             <article className="content-card project-card" key={project.index}>
-              <div className="project-preview" aria-hidden="true">
-                <div className="preview-block preview-block-one" />
-                <div className="preview-block preview-block-two" />
-                <div className="preview-block preview-block-three" />
-              </div>
+              <ProjectCover src={project.cover} title={project.title} />
               <div className="project-body">
                 <span className="card-index">SLOT {project.index}</span>
                 <h3>{project.title}</h3>

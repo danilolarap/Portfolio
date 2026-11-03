@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import ProjectCover from "./ProjectCover";
 import type { PortfolioContent, StationId } from "@/data/content";
 
 interface WorldDialogProps {
@@ -46,6 +47,7 @@ export default function WorldDialog({
           {copy.projects.cards.map((project) => (
             <article className="station-project" key={project.index}>
               <div>
+                <ProjectCover src={project.cover} title={project.title} />
                 <span className="station-project-index">{project.index}</span>
                 <h3>{project.title}</h3>
                 <p>{project.description}</p>
