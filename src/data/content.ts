@@ -39,6 +39,10 @@ export interface PortfolioContent {
     subtitle: string;
     play: string;
     controls: string;
+    characters: string;
+    characterHint: string;
+    selected: string;
+    characterNames: Record<"steve" | "alex" | "dragon" | "purple", string>;
     back: string;
     keyboardTitle: string;
     mobileTitle: string;
@@ -93,6 +97,7 @@ export interface PortfolioContent {
       title: string;
       description: string;
       repository: string;
+      cover: string;
       production?: string;
     }[];
   };
@@ -163,6 +168,15 @@ export const content: Record<Language, PortfolioContent> = {
       subtitle: "Un mundo construido bloque a bloque",
       play: "Jugar",
       controls: "Controles",
+      characters: "Personajes",
+      characterHint: "Elige tu personaje para explorar este mundo.",
+      selected: "Seleccionado",
+      characterNames: {
+        steve: "Steve",
+        alex: "Alex",
+        dragon: "Dragón del End",
+        purple: "Viajero púrpura",
+      },
       back: "Volver",
       keyboardTitle: "Controles de teclado",
       mobileTitle: "Controles táctiles",
@@ -248,13 +262,14 @@ export const content: Record<Language, PortfolioContent> = {
       eyebrow: "02 / EL TALLER",
       title: "Proyectos",
       intro:
-        "Una selección de proyectos interactivos para organizar espacios, planificar equipaje y explorar interfaces 3D.",
+        "Proyectos interactivos para organizar espacios, planificar equipaje, explorar interfaces 3D y competir en carreras de canicas.",
       openRepository: "Ver repositorio",
       openProduction: "Ver proyecto",
       cards: [
         {
           index: "01",
           title: "RoomLayout",
+          cover: "/projects/roomlayout.jpg",
           description:
             "Organizador interactivo de espacios para planificar distribuciones con una interfaz de arrastrar y soltar.",
           repository: "https://github.com/danilolarap/RoomLayout.git",
@@ -263,6 +278,7 @@ export const content: Record<Language, PortfolioContent> = {
         {
           index: "02",
           title: "PackGuide",
+          cover: "/projects/packguide.jpg",
           description:
             "Organizador de equipaje que optimiza la distribución de artículos dentro de maletas de viaje.",
           repository: "https://github.com/danilolarap/PackGuide.git",
@@ -270,10 +286,19 @@ export const content: Record<Language, PortfolioContent> = {
         {
           index: "03",
           title: "TiltClock",
+          cover: "/projects/tiltclock.jpg",
           description:
             "Aplicación de reloj con carátulas interactivas en formato GLB.",
           repository: "https://github.com/danilolarap/TiltClock.git",
           production: "https://tilt-clock.vercel.app/",
+        },
+        {
+          index: "04",
+          title: "MarbleOverdrive",
+          cover: "/projects/marbleoverdrive.png",
+          description:
+            "Juego de carreras de canicas en 3D para dos jugadores, con una pista compartida, poderes y estrategia.",
+          repository: "https://github.com/danilolarap/MarbleOverdrive.git",
         },
       ],
     },
@@ -374,6 +399,15 @@ export const content: Record<Language, PortfolioContent> = {
       subtitle: "A world built block by block",
       play: "Play",
       controls: "Controls",
+      characters: "Characters",
+      characterHint: "Choose your character to explore this world.",
+      selected: "Selected",
+      characterNames: {
+        steve: "Steve",
+        alex: "Alex",
+        dragon: "End Dragon",
+        purple: "Purple Traveler",
+      },
       back: "Back",
       keyboardTitle: "Keyboard controls",
       mobileTitle: "Touch controls",
@@ -454,13 +488,14 @@ export const content: Record<Language, PortfolioContent> = {
       eyebrow: "02 / THE WORKSHOP",
       title: "Projects",
       intro:
-        "A selection of interactive projects for arranging spaces, planning luggage, and exploring 3D interfaces.",
+        "Interactive projects for arranging spaces, planning luggage, exploring 3D interfaces, and racing marbles.",
       openRepository: "View repository",
       openProduction: "Open project",
       cards: [
         {
           index: "01",
           title: "RoomLayout",
+          cover: "/projects/roomlayout.jpg",
           description:
             "An interactive space planner for arranging layouts with a drag-and-drop interface.",
           repository: "https://github.com/danilolarap/RoomLayout.git",
@@ -469,6 +504,7 @@ export const content: Record<Language, PortfolioContent> = {
         {
           index: "02",
           title: "PackGuide",
+          cover: "/projects/packguide.jpg",
           description:
             "A travel packing organizer that optimizes how items fit inside suitcases.",
           repository: "https://github.com/danilolarap/PackGuide.git",
@@ -476,10 +512,19 @@ export const content: Record<Language, PortfolioContent> = {
         {
           index: "03",
           title: "TiltClock",
+          cover: "/projects/tiltclock.jpg",
           description:
             "A clock application featuring interactive watch faces in GLB format.",
           repository: "https://github.com/danilolarap/TiltClock.git",
           production: "https://tilt-clock.vercel.app/",
+        },
+        {
+          index: "04",
+          title: "MarbleOverdrive",
+          cover: "/projects/marbleoverdrive.png",
+          description:
+            "A 3D marble racing game for two players, featuring a shared track, powers, and strategy.",
+          repository: "https://github.com/danilolarap/MarbleOverdrive.git",
         },
       ],
     },
