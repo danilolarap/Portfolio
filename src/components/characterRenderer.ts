@@ -118,6 +118,49 @@ function skin(id: CharacterId, part: Part, face: Face, u: number, v: number) {
   return shirt;
 }
 
+const skinTextures = new Map<string, HTMLCanvasElement>();
+
+function faceTexture(
+  id: CharacterId,
+  part: Part,
+  face: Face,
+  w: number,
+  h: number,
+  light: number,
+) {
+  const key = `${id}:${part}:${face}:${w}:${h}:${light}`;
+  const cached = skinTextures.get(key);
+  if (cached) return cached;
+  const texture = document.createElement("canvas");
+  texture.width = w;
+  texture.height = h;
+  const ctx = texture.getContext("2d");
+  if (!ctx) return null;
+  for (let v = 0; v < h; v++)
+    for (let u = 0; u < w; u++) {
+      const base = skin(id, part, face, u, v);
+      const noise =
+        part === "head" && (id === "steve" || id === "alex")
+          ? 0
+          : (((u * 17 + v * 31 + w * 7) % 11) - 5) * 0.6;
+      const rgb = [1, 3, 5].map((offset) =>
+        Math.max(
+          0,
+          Math.min(
+            255,
+            Math.round(
+              parseInt(base.slice(offset, offset + 2), 16) * light + noise,
+            ),
+          ),
+        ),
+      );
+      ctx.fillStyle = `rgb(${rgb.join(",")})`;
+      ctx.fillRect(u, v, 1, 1);
+    }
+  skinTextures.set(key, texture);
+  return texture;
+}
+
 // Orthographic cuboids, with skin pixels mapped onto each face. Limbs rotate
 // around their actual shoulder/hip pivots rather than sliding across the body.
 export function drawCharacter(
@@ -251,43 +294,30 @@ export function drawCharacter(
   ctx.fill();
   faces.sort((a, b) => a.depth - b.depth);
   for (const face of faces) {
-    const [a, b, , d] = face.points;
-    const at = (u: number, v: number) =>
-      project({
-        x: a.x + (b.x - a.x) * u + (d.x - a.x) * v,
-        y: a.y + (b.y - a.y) * u + (d.y - a.y) * v,
-        z: a.z + (b.z - a.z) * u + (d.z - a.z) * v,
-      });
-    for (let v = 0; v < face.h; v++)
-      for (let u = 0; u < face.w; u++) {
-        const base = skin(id, face.part, face.face, u, v);
-        const noise = (((u * 17 + v * 31 + face.w * 7) % 11) - 5) * 1.4;
-        const rgb = [1, 3, 5].map((offset) =>
-          Math.max(
-            0,
-            Math.min(
-              255,
-              Math.round(
-                parseInt(base.slice(offset, offset + 2), 16) * face.light +
-                  noise,
-              ),
-            ),
-          ),
-        );
-        ctx.fillStyle = `rgb(${rgb.join(",")})`;
-        const points = [
-          at(u / face.w, v / face.h),
-          at((u + 1.015) / face.w, v / face.h),
-          at((u + 1.015) / face.w, (v + 1.015) / face.h),
-          at(u / face.w, (v + 1.015) / face.h),
-        ];
-        ctx.beginPath();
-        points.forEach((p, i) =>
-          i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y),
-        );
-        ctx.closePath();
-        ctx.fill();
-      }
+    const texture = faceTexture(
+      id,
+      face.part,
+      face.face,
+      face.w,
+      face.h,
+      face.light,
+    );
+    if (!texture) continue;
+    const a = project(face.points[0]),
+      b = project(face.points[1]),
+      d = project(face.points[3]);
+    ctx.save();
+    ctx.imageSmoothingEnabled = false;
+    ctx.transform(
+      (b.x - a.x) / face.w,
+      (b.y - a.y) / face.w,
+      (d.x - a.x) / face.h,
+      (d.y - a.y) / face.h,
+      a.x,
+      a.y,
+    );
+    ctx.drawImage(texture, 0, 0);
+    ctx.restore();
   }
   ctx.restore();
 }
