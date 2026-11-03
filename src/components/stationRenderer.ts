@@ -314,3 +314,26 @@ export function drawStation(
   }
 }
 
+export function drawChimneySmoke(
+  ctx: CanvasRenderingContext2D,
+  project: Project,
+  time: number,
+  reducedMotion: boolean,
+) {
+  ctx.save();
+  for (let i = 0; i < 5; i++) {
+    const life = reducedMotion ? i / 5 : (time / 3500 + i / 5) % 1;
+    const drift = life * 0.42 + Math.sin(life * 5) * 0.08;
+    const p = project(CHIMNEY.x + drift, CHIMNEY.y, CHIMNEY.z + life * 1.25);
+    const edge = project(
+      CHIMNEY.x + drift + 0.13 + life * 0.2,
+      CHIMNEY.y,
+      CHIMNEY.z + life * 1.25,
+    );
+    const size = Math.max(3, Math.abs(edge.x - p.x) * 1.8);
+    ctx.fillStyle = `rgba(221, 226, 214, ${0.52 * (1 - life)})`;
+    ctx.fillRect(p.x - size / 2, p.y - size / 2, size, size);
+    ctx.fillRect(p.x - size * 0.15, p.y - size * 0.8, size * 0.65, size * 0.6);
+  }
+  ctx.restore();
+}
