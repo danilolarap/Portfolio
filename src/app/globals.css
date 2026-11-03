@@ -1518,34 +1518,42 @@ section[id] {
   margin-bottom: 20px;
   max-width: 480px;
 }
-.avatar-illustration {
-  position: relative;
+.profile-portrait-link {
+  display: block;
   flex: none;
-  width: 125px;
-  height: 145px;
-  background: linear-gradient(135deg, #2a5d65, #1a3b46);
-  border: 2px solid #62918a;
-  box-shadow: inset -8px -8px #143541;
+  width: 155px;
+  border: 3px solid #8eb7a0;
+  background: #152d34;
+  box-shadow: 6px 6px #0c2630;
 }
-.avatar-head {
-  position: absolute;
-  width: 54px;
-  height: 50px;
-  left: 36px;
-  top: 24px;
-  background: #ddac8d;
-  border: 5px solid #213b4a;
-  box-shadow: inset 0 12px #314e5c;
+.profile-portrait-link:focus-visible {
+  outline: 3px solid #e9cb7e;
+  outline-offset: 4px;
 }
-.avatar-body {
-  position: absolute;
-  width: 72px;
-  height: 49px;
-  left: 26px;
-  bottom: 0;
-  background: #36a8ad;
-  border: 5px solid #1b4653;
-  border-bottom: 0;
+.profile-portrait {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: auto;
+}
+.station-profile-portrait {
+  display: block;
+  width: min(180px, 100%);
+  height: auto;
+  margin: 0 auto 22px;
+  border: 3px solid #8eb7a0;
+  box-shadow: 5px 5px #0c2630;
+}
+@media (max-width: 540px) {
+  .about-feature {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
+  .profile-portrait-link {
+    width: min(200px, 100%);
+    align-self: center;
+  }
 }
 .about-facts {
   display: grid;
