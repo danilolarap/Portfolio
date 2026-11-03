@@ -8,7 +8,27 @@ export const CHARACTERS = [
 export type CharacterId = (typeof CHARACTERS)[number]["id"];
 type Vec = { x: number; y: number; z: number };
 type Part = "head" | "body" | "arm" | "leg" | "horn" | "snout";
-type Face = "front" | "back" | "side" | "top";
+type Face = "front" | "back" | "left" | "right" | "bottom" | "top";
+
+// Broad, connected locks of hair. The head uses authored pixels rather than
+// the procedural fabric noise, which made the scalp look like a checkerboard.
+const HAIR = [
+  "11122211",
+  "11222211",
+  "01221100",
+  "00111000",
+  "01100110",
+  "11100111",
+  "11001111",
+  "10001110",
+];
+
+function hairColor(alex: boolean, u: number, v: number) {
+  const palette = alex
+    ? ["#ad581f", "#bb6425", "#c7752d"]
+    : ["#382519", "#402b1c", "#493020"];
+  return palette[Number(HAIR[v % 8][u % 8])];
+}
 
 export function isCharacterId(value: unknown): value is CharacterId {
   return CHARACTERS.some((character) => character.id === value);
@@ -52,24 +72,34 @@ function skin(id: CharacterId, part: Part, face: Face, u: number, v: number) {
   }
   const alex = id === "alex";
   const flesh = alex ? "#f0c997" : "#bc885e";
-  const hair = alex ? "#bc601f" : "#47301e";
+  const hair = hairColor(alex, u, v);
   const shirt = alex ? "#8eaf59" : "#16a5ac";
   if (part === "head") {
-    if (
-      face === "top" ||
-      face === "back" ||
-      v < 2 ||
-      (face === "side" && (u < 3 || v < 3))
-    )
-      return hair;
+    if (face === "top" || face === "back") return hair;
+    if (face === "left" || face === "right") {
+      const fromBack = face === "left" ? u : 7 - u;
+      const hairline = alex
+        ? fromBack < 5
+          ? 8
+          : fromBack === 5
+            ? 5
+            : 2
+        : fromBack < 5
+          ? 5
+          : fromBack === 5
+            ? 4
+            : 2;
+      return v < hairline ? hair : flesh;
+    }
     if (face === "front") {
+      if (v < 2 || (alex && ((v === 2 && u < 3) || (v === 3 && u === 0))))
+        return hair;
       if (v === 4 && (u === 1 || u === 2 || u === 5 || u === 6))
         return u === 2 || u === 5 ? (alex ? "#3a7432" : "#405bad") : "#f1eee0";
       if (!alex && v >= 6 && u >= 2 && u <= 5)
         return v === 6 && (u === 3 || u === 4) ? "#b77b59" : "#51301f";
       if (alex && v === 6 && (u === 3 || u === 4)) return "#ce8070";
       if (v === 5 && (u === 3 || u === 4)) return alex ? "#e3b382" : "#a86d48";
-      if (alex && ((v === 2 && u < 3) || (v === 3 && u === 0))) return hair;
     }
     return flesh;
   }
@@ -160,10 +190,10 @@ export function drawCharacter(
     const definitions: [number[], Face, number, number, number][] = [
       [[7, 6, 5, 4], "front", w, h, 1],
       [[2, 3, 0, 1], "back", w, h, 0.72],
-      [[3, 7, 4, 0], "side", d, h, 0.68],
-      [[6, 2, 1, 5], "side", d, h, 0.8],
+      [[3, 7, 4, 0], "left", d, h, 0.68],
+      [[6, 2, 1, 5], "right", d, h, 0.8],
       [[3, 2, 6, 7], "top", w, d, 1.12],
-      [[4, 5, 1, 0], "side", w, d, 0.55],
+      [[4, 5, 1, 0], "bottom", w, d, 0.55],
     ];
     for (const [indices, face, fw, fh, light] of definitions) {
       const points = indices.map((i) => corners[i]);
