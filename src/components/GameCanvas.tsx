@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { drawCharacter, type CharacterId } from "./characterRenderer";
 import type { PointerEvent, RefObject } from "react";
 import type { PortfolioContent, StationId } from "@/data/content";
 
@@ -17,6 +18,7 @@ export const STATIONS: { id: StationId; x: number; y: number }[] = [
 ];
 
 interface GameCanvasProps {
+  character: CharacterId;
   active: boolean;
   suspended: boolean;
   world: PortfolioContent["world"];
@@ -64,6 +66,7 @@ function polygon(
 }
 
 export default function GameCanvas({
+  character,
   active,
   suspended,
   world,
@@ -78,7 +81,10 @@ export default function GameCanvas({
   const velocityRef = useRef<Point>({ x: 0, y: 0 });
   const walkPhaseRef = useRef(0);
   const movementRef = useRef(0);
-  const facingRef = useRef<"front" | "back" | "left" | "right">("front");
+  const yawRef = useRef(-0.25);
+  const targetYawRef = useRef(-0.25);
+  const characterRef = useRef(character);
+  characterRef.current = character;
   const keysRef = useRef(new Set<string>());
   const nearbyRef = useRef<StationId | null>(null);
   const visibleRef = useRef(true);
@@ -369,84 +375,18 @@ export default function GameCanvas({
 
     const drawPlayer = (time: number) => {
       const center = project(0, 0);
-      const motion = movementRef.current;
-      const idleBreath = Math.sin(time * 0.0033) * 0.45;
-      const bob =
-        Math.abs(Math.sin(walkPhaseRef.current * 2)) * 2.2 * motion +
-        idleBreath;
-      const stride = Math.sin(walkPhaseRef.current) * 4.2 * motion;
-      const oppositeStride = -stride;
-      const scale = Math.max(0.72, Math.min(1.15, tile / 46));
-
-      context!.save();
-      context!.translate(center.x, center.y + bob);
-      context!.scale(scale, scale);
-      context!.fillStyle = "rgba(14, 39, 33, .42)";
-      context!.beginPath();
-      context!.ellipse(0, 17, 13 - motion * 1.5, 4, 0, 0, Math.PI * 2);
-      context!.fill();
-
-      context!.fillStyle = "#1b2934";
-      context!.fillRect(-9 + stride, 12 + Math.max(0, -stride) * 0.25, 8, 4);
-      context!.fillRect(
-        1 + oppositeStride,
-        12 + Math.max(0, stride) * 0.25,
-        8,
-        4,
-      );
-      context!.fillStyle = "#31567a";
-      context!.fillRect(-8 + stride, 2 + Math.max(0, -stride) * 0.3, 7, 12);
-      context!.fillRect(
-        1 + oppositeStride,
-        2 + Math.max(0, stride) * 0.3,
-        7,
-        12,
-      );
-
-      const armSwing = -stride * 0.8;
-      context!.fillStyle = "#157f8c";
-      context!.fillRect(-14, -9 + armSwing, 5, 13);
-      context!.fillRect(9, -9 - armSwing, 5, 13);
-      context!.fillStyle = "#dca775";
-      context!.fillRect(-14, 2 + armSwing, 5, 5);
-      context!.fillRect(9, 2 - armSwing, 5, 5);
-
-      context!.fillStyle = "#176f7a";
-      context!.fillRect(-10, -12, 20, 17);
-      context!.fillStyle = "#28aeb5";
-      context!.fillRect(-9, -12, 17, 14);
-      context!.fillStyle = "#8fe1d1";
-      context!.fillRect(-7, -10, 4, 5);
-
-      context!.fillStyle = "#bf875e";
-      context!.fillRect(-9, -29, 18, 18);
-      context!.fillStyle = "#dca775";
-      context!.fillRect(-7, -29, 14, 16);
-      context!.fillStyle = "#315f8c";
-      context!.fillRect(-10, -32, 20, 7);
-      context!.fillRect(-8, -36, 15, 5);
-      context!.fillStyle = "#447ba4";
-      context!.fillRect(-5, -35, 8, 3);
-
-      if (facingRef.current === "front") {
-        context!.fillStyle = "#e9e4c7";
-        context!.fillRect(-5, -23, 4, 4);
-        context!.fillRect(3, -23, 4, 4);
-        context!.fillStyle = "#293642";
-        context!.fillRect(-3, -22, 2, 3);
-        context!.fillRect(5, -22, 2, 3);
-      } else if (facingRef.current === "left") {
-        context!.fillStyle = "#e9e4c7";
-        context!.fillRect(-6, -23, 4, 4);
-        context!.fillStyle = "#293642";
-        context!.fillRect(-6, -22, 2, 3);
-      } else if (facingRef.current === "right") {
-        context!.fillStyle = "#e9e4c7";
-        context!.fillRect(2, -23, 4, 4);
-        context!.fillStyle = "#293642";
-        context!.fillRect(4, -22, 2, 3);
-      }
-      context!.restore();
+      const scale = Math.max(1.25, Math.min(2.1, tile / 30));
+      drawCharacter(context, {
+        id: characterRef.current,
+        x: center.x,
+        y: center.y + 14,
+        scale,
+        yaw: yawRef.current,
+        phase: walkPhaseRef.current,
+        movement: movementRef.current,
+        time,
+        reducedMotion,
+      });
 
       context!.font = `bold ${Math.max(8, tile * 0.22)}px monospace`;
       context!.textAlign = "center";
@@ -455,10 +395,16 @@ export default function GameCanvas({
       context!.fillText(
         worldRef.current.playerRole.split(" /")[0],
         center.x,
-        center.y - 43 * scale + bob,
+        center.y - 35 * scale,
       );
     };
 
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let reducedMotion = motionQuery.matches;
+    const updateMotion = () => {
+      reducedMotion = motionQuery.matches;
+    };
+    motionQuery.addEventListener("change", updateMotion);
     let inViewport = true;
     const draw = (time: number) => {
       animation = 0;
@@ -502,17 +448,20 @@ export default function GameCanvas({
                   inputStrength,
               }
             : { x: 0, y: 0 };
-        const response = Math.min(1, delta * (inputStrength > 0.08 ? 11 : 13));
+        const response =
+          1 - Math.exp(-delta * (inputStrength > 0.08 ? 14 : 18));
         velocityRef.current.x +=
           (targetVelocity.x - velocityRef.current.x) * response;
         velocityRef.current.y +=
           (targetVelocity.y - velocityRef.current.y) * response;
 
-        if (inputStrength > 0.08) {
-          if (Math.abs(moveX) > Math.abs(moveY))
-            facingRef.current = moveX < 0 ? "left" : "right";
-          else facingRef.current = moveY < 0 ? "back" : "front";
-        }
+        if (inputStrength > 0.08)
+          targetYawRef.current = Math.atan2(moveX + moveY, moveY - moveX);
+        const turn = Math.atan2(
+          Math.sin(targetYawRef.current - yawRef.current),
+          Math.cos(targetYawRef.current - yawRef.current),
+        );
+        yawRef.current += turn * (1 - Math.exp(-delta * 14));
 
         const next = {
           x: positionRef.current.x + velocityRef.current.x * delta,
@@ -536,7 +485,7 @@ export default function GameCanvas({
           Math.hypot(velocityRef.current.x, velocityRef.current.y) / 2.45,
         );
         if (movementRef.current > 0.04)
-          walkPhaseRef.current += delta * (8 + movementRef.current * 7);
+          walkPhaseRef.current += delta * 10.5 * movementRef.current;
       }
 
       context!.clearRect(0, 0, width, height);
@@ -641,6 +590,7 @@ export default function GameCanvas({
     scheduleFrame();
     return () => {
       window.cancelAnimationFrame(animation);
+      motionQuery.removeEventListener("change", updateMotion);
       observer.disconnect();
       visibilityObserver?.disconnect();
       document.removeEventListener("visibilitychange", updateVisibility);

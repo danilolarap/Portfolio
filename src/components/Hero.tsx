@@ -4,11 +4,21 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { PointerEvent } from "react";
 import GameCanvas, { STATIONS, type Point } from "./GameCanvas";
 import WorldDialog from "./WorldDialog";
+import CharacterPreview from "./CharacterPreview";
+import {
+  CHARACTERS,
+  isCharacterId,
+  type CharacterId,
+} from "./characterRenderer";
 import type { PortfolioContent, StationId } from "@/data/content";
 
-type Screen = "title" | "controls" | "game";
+type Screen = "title" | "controls" | "characters" | "game";
 
 export default function Hero({ copy }: { copy: PortfolioContent }) {
+  const [character, setCharacter] = useState<CharacterId>("steve");
+  const menuPanelRef = useRef<HTMLElement>(null);
+  const charactersButtonRef = useRef<HTMLButtonElement>(null);
+  const previousScreenRef = useRef<Screen>("title");
   const [screen, setScreen] = useState<Screen>("title");
   const [activeStation, setActiveStation] = useState<StationId | null>(null);
   const [visited, setVisited] = useState<StationId[]>([]);
@@ -16,6 +26,31 @@ export default function Hero({ copy }: { copy: PortfolioContent }) {
   const touchVector = useRef<Point>({ x: 0, y: 0 });
   const joystickKnobRef = useRef<HTMLSpanElement>(null);
   const [actionVersion, setActionVersion] = useState(0);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("portfolio-character");
+      if (isCharacterId(saved)) setCharacter(saved);
+    } catch {
+      /* Storage can be disabled by the browser. */
+    }
+  }, []);
+
+  useEffect(() => {
+    if (screen === "characters") menuPanelRef.current?.focus();
+    if (screen === "title" && previousScreenRef.current === "characters")
+      charactersButtonRef.current?.focus();
+    previousScreenRef.current = screen;
+  }, [screen]);
+
+  const selectCharacter = (id: CharacterId) => {
+    setCharacter(id);
+    try {
+      localStorage.setItem("portfolio-character", id);
+    } catch {
+      /* Keep the in-memory choice. */
+    }
+  };
 
   const resetJoystick = useCallback(() => {
     touchVector.current = { x: 0, y: 0 };
@@ -77,6 +112,7 @@ export default function Hero({ copy }: { copy: PortfolioContent }) {
     >
       <div className="world-stage">
         <GameCanvas
+          character={character}
           active={screen === "game" && !activeStation}
           suspended={Boolean(activeStation)}
           world={copy.world}
@@ -116,12 +152,18 @@ export default function Hero({ copy }: { copy: PortfolioContent }) {
 
             <div className="game-hud-bottom">
               <div className="game-player-card">
-                <span className="tiny-player" aria-hidden="true">
+                <span
+                  className={`tiny-player tiny-player-${character}`}
+                  aria-hidden="true"
+                >
                   <i />
                 </span>
                 <span>
                   <strong>{copy.playerName}</strong>
-                  <small>{copy.world.playerRole}</small>
+                  <small>
+                    {copy.welcome.characterNames[character]} ·{" "}
+                    {copy.world.playerRole}
+                  </small>
                 </span>
               </div>
               <div className="game-key-hints">
@@ -223,7 +265,64 @@ export default function Hero({ copy }: { copy: PortfolioContent }) {
                 >
                   {copy.welcome.controls}
                 </button>
+                <button
+                  ref={charactersButtonRef}
+                  className="login-controls-button"
+                  type="button"
+                  onClick={() => setScreen("characters")}
+                >
+                  {copy.welcome.characters}
+                </button>
                 <p className="login-footnote">{copy.welcome.menuFooter}</p>
+              </section>
+            ) : screen === "characters" ? (
+              <section
+                className="controls-panel characters-panel"
+                aria-labelledby="characters-title"
+                ref={menuPanelRef}
+                tabIndex={-1}
+              >
+                <div className="controls-panel-head">
+                  <span>SKIN SELECT / 04</span>
+                  <span className="pixel-status" />
+                </div>
+                <h1 id="characters-title">{copy.welcome.characters}</h1>
+                <p>{copy.welcome.characterHint}</p>
+                <div className="character-showcase">
+                  <CharacterPreview character={character} large />
+                  <strong aria-live="polite">
+                    {copy.welcome.characterNames[character]}
+                  </strong>
+                  <span>{copy.welcome.selected}</span>
+                </div>
+                <div
+                  className="character-grid"
+                  role="group"
+                  aria-label={copy.welcome.characters}
+                >
+                  {CHARACTERS.map((item) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      className="character-option"
+                      aria-pressed={character === item.id}
+                      onClick={() => selectCharacter(item.id)}
+                    >
+                      <CharacterPreview character={item.id} />
+                      <strong>{copy.welcome.characterNames[item.id]}</strong>
+                      <span aria-hidden="true">
+                        {character === item.id ? "✓" : "+"}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+                <button
+                  className="login-play-button controls-back-button"
+                  type="button"
+                  onClick={() => setScreen("title")}
+                >
+                  {copy.welcome.back}
+                </button>
               </section>
             ) : (
               <section
