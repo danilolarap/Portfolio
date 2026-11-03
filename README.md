@@ -19,6 +19,21 @@ Open `http://localhost:3000`. Use `npm run build` to verify a production build, 
 - `src/components/` contains one component for each portfolio section.
 - `src/data/content.ts` holds the Spanish and English copy and the section types.
 
+## Characters and projects
+
+Use **Personajes / Characters** below Play and Controls to choose Steve, Alex, End Dragon, or Purple Traveler. The selection is saved in the browser. Characters share a cuboid renderer with pixel textures, shoulder and hip animation, smooth turning, and support for reduced motion preferences.
+
+The project cards appear from right to left on desktop: RoomLayout, PackGuide, TiltClock, and MarbleOverdrive. On mobile they stack in that same reading order. Covers keep their original proportions and open at full size when clicked. The same covers are used in the world's project station.
+
+Original cover files belong in `public/projects/`:
+
+- `roomlayout.jpg` — original artwork still needed.
+- `packguide.jpg` — original artwork still needed.
+- `tiltclock.jpg` — original artwork still needed.
+- `marbleoverdrive.png` — original artwork included.
+
+Missing covers display the project name until the original files are added and the page is reloaded. Keep the supplied images unchanged; do not replace them with generated artwork.
+
 ## Content still needed
 
 The interface deliberately marks missing information as pending. Before final submission, add a real resume PDF, project details and screenshots, at least three authentic testimonials, education and work history, and confirmed contact channels. Do not replace placeholders with invented claims.
