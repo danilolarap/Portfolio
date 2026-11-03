@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { drawCharacter, type CharacterId } from "./characterRenderer";
 import {
   drawStation,
+  drawChimneySmoke,
   STATION_HEIGHT,
 } from "./stationRenderer";
 import type { PointerEvent, RefObject } from "react";
@@ -534,6 +535,18 @@ export default function GameCanvas({
         nearbyRef.current = nearbyId;
         callbacksRef.current.onNearbyChange(nearbyId);
       }
+      const home = STATIONS.find((station) => station.id === "about")!;
+      drawChimneySmoke(
+        context,
+        (x, y, z) =>
+          project(
+            home.x + x - positionRef.current.x,
+            home.y + y - positionRef.current.y,
+            z * tile * 0.5,
+          ),
+        time,
+        reducedMotion,
+      );
       drawPlayer(time);
       if (nearbyId) {
         const label = worldRef.current.open;
