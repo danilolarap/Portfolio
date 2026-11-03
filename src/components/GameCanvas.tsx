@@ -2,6 +2,10 @@
 
 import { useEffect, useRef } from "react";
 import { drawCharacter, type CharacterId } from "./characterRenderer";
+import {
+  drawStation,
+  STATION_HEIGHT,
+} from "./stationRenderer";
 import type { PointerEvent, RefObject } from "react";
 import type { PortfolioContent, StationId } from "@/data/content";
 
@@ -295,43 +299,35 @@ export default function GameCanvas({
       context!.fillRect(point.x - 1, point.y + 4, 2, 2);
     };
 
-    const drawBuilding = (
-      station: (typeof STATIONS)[number],
-      index: number,
-    ) => {
-      const palettes = [
-        ["#4ca99b", "#287a72", "#22635e", "#193e3a"],
-        ["#a779c2", "#79539d", "#60437f", "#3b3158"],
-        ["#d0a75d", "#9b7139", "#79552f", "#573b28"],
-        ["#cf7262", "#9c4c45", "#783c3a", "#502c31"],
-      ][index];
-      const x = station.x - 0.75;
-      const y = station.y - 0.9;
-      block(x, y, palettes[0], palettes[1], palettes[2], 1.55, 20);
-      block(x + 0.22, y + 0.08, palettes[0], palettes[1], palettes[2], 1.1, 53);
-      block(x + 0.12, y + 0.05, palettes[3], palettes[3], palettes[3], 0.3, 43);
-      block(x + 0.68, y + 0.06, palettes[3], palettes[3], palettes[3], 0.3, 43);
-      block(x + 0.42, y - 0.1, palettes[0], palettes[1], palettes[2], 0.45, 75);
+    const drawBuilding = (station: (typeof STATIONS)[number]) => {
+      drawStation(context, station.id, (x, y, z) =>
+        project(
+          station.x + x - WORLD_ORIGIN.x,
+          station.y + y - WORLD_ORIGIN.y,
+          z * tile * 0.5,
+        ),
+      );
       const sign = project(
         station.x - WORLD_ORIGIN.x,
-        station.y - 1.45 - WORLD_ORIGIN.y,
-        54,
+        station.y - WORLD_ORIGIN.y,
+        STATION_HEIGHT[station.id] * tile * 0.5 + 8,
       );
-      context!.fillStyle = "#142b29";
-      context!.fillRect(sign.x - 40, sign.y - 7, 80, 15);
-      context!.strokeStyle = "#c4dca2";
-      context!.strokeRect(sign.x - 40, sign.y - 7, 80, 15);
-      context!.fillStyle = "#edf1d6";
-      context!.font = `bold ${Math.max(7, tile * 0.2)}px monospace`;
-      context!.textAlign = "center";
-      context!.textBaseline = "middle";
-      context!.fillText(
+      const signWidth = 84;
+      context.fillStyle = "#142b29";
+      context.fillRect(sign.x - signWidth / 2, sign.y - 7, signWidth, 15);
+      context.strokeStyle = "#c4dca2";
+      context.strokeRect(sign.x - signWidth / 2, sign.y - 7, signWidth, 15);
+      context.fillStyle = "#edf1d6";
+      context.font = `bold ${Math.max(8, tile * 0.16)}px monospace`;
+      context.textAlign = "center";
+      context.textBaseline = "middle";
+      context.fillText(
         worldRef.current.stations[station.id],
         sign.x,
         sign.y + 0.5,
-        74,
+        signWidth - 6,
       );
-      drawChest(station.x + 0.75, station.y + 0.63);
+      drawChest(station.x + 1.15, station.y + 0.95);
     };
 
     const drawWorld = () => {
@@ -350,7 +346,7 @@ export default function GameCanvas({
           drawTree(prop.x, prop.y, (prop.x + prop.y) % 2);
         else block(prop.x, prop.y, "#a6aaa0", "#727f78", "#596c68", 0.55, 14);
       }
-      STATIONS.forEach((station, index) => drawBuilding(station, index));
+      STATIONS.toSorted((a, b) => a.x + a.y - b.x - b.y).forEach(drawBuilding);
     };
 
     const buildWorldLayer = () => {
