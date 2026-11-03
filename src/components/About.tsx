@@ -8,10 +8,21 @@ export default function About({ copy }: { copy: PortfolioContent }) {
         <SectionHeading {...copy.about} />
         <div className="grid gap-5 lg:grid-cols-[1.1fr_.9fr]">
           <div className="content-card about-feature">
-            <div className="avatar-illustration" aria-hidden="true">
-              <div className="avatar-head" />
-              <div className="avatar-body" />
-            </div>
+            <a
+              className="profile-portrait-link"
+              href="/profile/danilo-lara.jpg"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                className="profile-portrait"
+                src="/profile/danilo-lara.jpg"
+                alt={copy.playerName}
+                width={959}
+                height={1280}
+                loading="lazy"
+              />
+            </a>
             <div>
               <span className="card-index">DANILO / 01</span>
               <h3>{copy.about.featureTitle}</h3>
