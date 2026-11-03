@@ -141,6 +141,32 @@ function model(id: StationId) {
       box(x, 0.77, 0.18, 0.32, 0.25, 0.12, "concrete");
       box(x + 0.025, 0.79, 0.3, 0.27, 0.21, 0.15, "leaf");
     }
+  } else if (id === "contact") {
+    box(-1.08, -0.87, 0, 2.16, 1.9, 0.12, "stone");
+    box(-0.85, -0.5, 0.12, 1.7, 1.3, 0.65, "gold");
+    box(-0.96, -0.57, 0.76, 1.92, 1.44, 0.12, "wood");
+    box(-0.75, 0.81, 0.29, 1.5, 0.04, 0.4, "green");
+    for (const x of [-0.85, 0.78])
+      box(x, -0.42, 0.85, 0.075, 0.075, 0.85, "steel");
+    // Block-built red and white parasol, with a stepped square silhouette.
+    for (let level = 0; level < 3; level++) {
+      const size = 2.3 - level * 0.62;
+      for (let stripe = 0; stripe < 4; stripe++)
+        box(
+          -size / 2 + (stripe * size) / 4,
+          -size / 2,
+          1.6 + level * 0.14,
+          size / 4,
+          size,
+          0.12,
+          stripe % 2 ? "white" : "red",
+        );
+    }
+    box(-0.06, -0.06, 1.99, 0.12, 0.12, 0.12, "steel");
+    for (let i = 0; i < 3; i++) {
+      box(-0.56 + i * 0.4, 0.31, 0.88, 0.23, 0.31, 0.045, "dark");
+      box(-0.53 + i * 0.4, 0.37, 0.93, 0.17, 0.17, 0.012, "glass");
+    }
   }
   return boxes;
 }
