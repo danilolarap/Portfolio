@@ -27,12 +27,12 @@ The project cards appear from right to left on desktop: RoomLayout, PackGuide, T
 
 Original cover files belong in `public/projects/`:
 
-- `roomlayout.jpg` — original artwork still needed.
-- `packguide.jpg` — original artwork still needed.
-- `tiltclock.jpg` — original artwork still needed.
+- `roomlayout.jpg` — original artwork included.
+- `packguide.jpg` — original artwork included.
+- `tiltclock.jpg` — original artwork included.
 - `marbleoverdrive.png` — original artwork included.
 
-Missing covers display the project name until the original files are added and the page is reloaded. Keep the supplied images unchanged; do not replace them with generated artwork.
+The three JPEG covers were copied byte-for-byte from the supplied JFIF files; only their filename extensions changed. Missing covers display the project name. Keep the supplied images unchanged; do not replace them with generated artwork.
 
 ## Content still needed
 
