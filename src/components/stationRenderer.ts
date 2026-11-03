@@ -4,6 +4,7 @@ type Point = { x: number; y: number };
 type Vertex = Point & { z: number };
 type Material =
   | "wood"
+  | "spruce"
   | "log"
   | "stone"
   | "roof"
@@ -16,25 +17,28 @@ type Material =
   | "green"
   | "gold"
   | "steel"
+  | "blue"
+  | "screen"
   | "leaf";
 type Box = Vertex & { w: number; d: number; h: number; material: Material };
 type Project = (x: number, y: number, z: number) => Point;
 
-export const CHIMNEY = { x: -0.72, y: -0.46, z: 2.65 };
+export const CHIMNEY = { x: -0.72, y: -0.46, z: 3.25 };
 export const STATION_HEIGHT: Record<StationId, number> = {
   projects: 4.15,
-  about: 3.15,
-  contact: 2.5,
+  about: 3.75,
+  contact: 3.05,
   skills: 3.45,
 };
 
 const palettes: Record<Material, string[]> = {
-  wood: ["#a47840", "#b88a4b", "#c79a57", "#956836"],
-  log: ["#614126", "#76512d", "#8b6336", "#6b4828"],
-  stone: ["#777c79", "#959b91", "#696f6e", "#858e87"],
-  roof: ["#c15f2c", "#d77535", "#b75225", "#e18a44"],
+  wood: ["#8b6139", "#976c40", "#a57949", "#78522f"],
+  spruce: ["#49301e", "#543923", "#62422a", "#3c271b"],
+  log: ["#4e3423", "#62442b", "#745234", "#553924"],
+  stone: ["#797e78", "#898e86", "#656d68", "#92958a"],
+  roof: ["#a64f29", "#bb6332", "#934323", "#c87940"],
   glass: ["#458a97", "#66a8b1", "#347583", "#8cbfc1"],
-  concrete: ["#d3ceba", "#c5c2b0", "#e0dbc7", "#b9b8a8"],
+  concrete: ["#cbcbbd", "#d1d0c2", "#c3c4b7", "#d8d6c8"],
   dark: ["#252e30", "#1c2428", "#343b3a", "#202b2e"],
   light: ["#ffd77b", "#ffe8a0", "#eeb65c", "#ffefba"],
   red: ["#d9483d", "#e85846", "#c73831", "#e66c53"],
@@ -42,24 +46,90 @@ const palettes: Record<Material, string[]> = {
   green: ["#9bd84d", "#b0e45b", "#91c943", "#bce96a"],
   gold: ["#dbac43", "#f1ca61", "#bc8d2f", "#e5b94b"],
   steel: ["#b1c3c9", "#dce6e4", "#91a8b1", "#eaf0e7"],
+  blue: ["#2167a1", "#2d7bb5", "#1b5488", "#388bc1"],
+  screen: ["#80cdd2", "#a2e1db", "#5daebc", "#8ed5da"],
   leaf: ["#46763c", "#5e9448", "#3c6835", "#79a84f"],
 };
 
 function texture(material: Material, u: number, v: number, top: boolean) {
   const palette = palettes[material];
-  if (material === "glass") {
-    if (u % 4 === 0 || v % 3 === 0) return "#afc9c5";
-    return palette[(Math.floor(u / 4) + Math.floor(v / 3)) % 4];
+  const grain = (u * 13 + v * 23 + Math.floor(u / 3) * 7) % 17;
+  if (material === "wood" || material === "spruce") {
+    const row = Math.floor(v / 8);
+    const x = (u + (row % 2) * 12) % 24;
+    if (v % 8 === 0 || x === 0)
+      return material === "spruce" ? "#2f2017" : "#5d3d25";
+    const knot = Math.abs(x - 14) + Math.abs((v % 8) - 4) * 2;
+    if (row % 3 === 1 && knot < 4) return palette[knot % 2 ? 3 : 0];
+    return palette[(Math.floor(u / 6) + v + (grain > 13 ? 1 : 0)) % 4];
   }
-  if (material === "wood" && v % 3 === 0) return "#7e552e";
-  if (material === "log" && !top) return palette[u % 4];
-  if (
-    material === "stone" &&
-    (v % 4 === 0 || (u + Math.floor(v / 4) * 2) % 5 === 0)
-  )
-    return "#5c6461";
-  const seed = (u * 13 + v * 23 + Math.floor(u / 3) * 7) % 17;
-  return palette[seed < 8 ? 0 : seed < 12 ? 1 : seed < 15 ? 2 : 3];
+  if (material === "log") {
+    if (top) {
+      const ring = Math.floor(
+        Math.max(Math.abs((u % 16) - 7.5), Math.abs((v % 16) - 7.5)),
+      );
+      return ["#805c37", "#a47b4a", "#91683e", "#67462c"][ring % 4];
+    }
+    return palette[(Math.floor(u / 2) + (v % 13 === 0 ? 1 : 0)) % 4];
+  }
+  if (material === "stone") {
+    const row = Math.floor(v / 7),
+      x = (u + (row % 2) * 5) % 11;
+    if (v % 7 === 0 || x === 0) return "#48534e";
+    const rock = (Math.floor((u + (row % 2) * 5) / 11) * 7 + row * 3) % 4;
+    if (v % 7 === 1 || x === 1) return palette[1];
+    if (grain === 16 && rock === 2) return "#66765a";
+    return palette[grain > 13 ? (rock + 1) % 4 : rock];
+  }
+  if (material === "roof") {
+    if (v % 6 === 0 || (u + Math.floor(v / 6) * 4) % 12 === 0) return "#74391f";
+    return palette[grain < 12 ? 0 : grain < 15 ? 1 : 3];
+  }
+  if (material === "glass") {
+    if (u % 6 === 0 || v % 5 === 0) return "#b5c9c4";
+    if (u % 6 === 1) return "#89b8bd";
+    return palette[(Math.floor(u / 6) + Math.floor(v / 5)) % 4];
+  }
+  if (material === "light")
+    return v % 6 === 0 || u % 6 === 0 ? "#c18a3b" : "#ffe5a0";
+  if (material === "red" || material === "white" || material === "green")
+    return palette[grain > 14 ? 1 : 0];
+  return palette[grain < 10 ? 0 : grain < 14 ? 1 : grain < 16 ? 2 : 3];
+}
+
+const materialTextures = new Map<string, HTMLCanvasElement>();
+
+function materialTexture(
+  material: Material,
+  w: number,
+  h: number,
+  shade: number,
+  top: boolean,
+) {
+  const cols = Math.max(1, Math.round(w * 24)),
+    rows = Math.max(1, Math.round(h * 24));
+  const key = `${material}:${cols}:${rows}:${shade}:${top}`;
+  const cached = materialTextures.get(key);
+  if (cached) return cached;
+  const image = document.createElement("canvas");
+  image.width = cols;
+  image.height = rows;
+  const ctx = image.getContext("2d");
+  if (!ctx) return null;
+  for (let v = 0; v < rows; v++)
+    for (let u = 0; u < cols; u++) {
+      const color = texture(material, u, v, top);
+      const rgb = [1, 3, 5].map((offset) =>
+        Math.min(
+          255,
+          Math.round(parseInt(color.slice(offset, offset + 2), 16) * shade),
+        ),
+      );
+      ctx.fillStyle = `rgb(${rgb.join(",")})`;
+      ctx.fillRect(u, v, 1, 1);
+    }
+  materialTextures.set(key, image);
+  return image;
 }
 
 function model(id: StationId) {
@@ -111,10 +181,24 @@ function model(id: StationId) {
     }
     box(0.925, -0.33, 0.65, 0.025, 0.55, 0.38, "light");
     box(0.96, -0.1, 0.65, 0.035, 0.04, 0.38, "log");
-    pitchedRoof("wood", 1.33);
-    box(-0.88, -0.62, 0.22, 0.34, 0.34, 2.31, "stone");
-    box(-0.94, -0.68, 2.48, 0.46, 0.46, 0.16, "stone");
-    box(-0.86, -0.6, 2.645, 0.3, 0.3, 0.015, "dark");
+    // Upper storey, overhanging spruce roof and a timber balcony.
+    box(-0.9, -0.78, 1.34, 1.8, 1.56, 0.6, "wood");
+    for (const x of [-0.92, 0.77]) box(x, 0.72, 1.3, 0.16, 0.16, 0.76, "log");
+    box(-0.36, 0.79, 1.43, 0.72, 0.06, 0.49, "log");
+    box(-0.29, 0.86, 1.48, 0.58, 0.025, 0.4, "glass");
+    box(-0.025, 0.89, 1.48, 0.05, 0.025, 0.4, "wood");
+    box(-0.68, 0.82, 1.27, 1.36, 0.44, 0.12, "spruce");
+    for (let i = 0; i < 7; i++)
+      box(-0.63 + i * 0.2, 1.18, 1.38, 0.06, 0.065, 0.3, "wood");
+    box(-0.68, 1.16, 1.64, 1.36, 0.11, 0.07, "wood");
+    pitchedRoof("spruce", 1.93);
+    box(-1.18, 0.68, 1.21, 0.5, 0.66, 0.15, "spruce");
+    box(0.68, 0.68, 1.21, 0.5, 0.66, 0.15, "spruce");
+    box(-0.07, 1.05, 2.2, 0.14, 0.14, 0.22, "light");
+    box(-0.1, 1.02, 2.42, 0.2, 0.2, 0.045, "dark");
+    box(-0.88, -0.62, 0.22, 0.34, 0.34, 2.91, "stone");
+    box(-0.94, -0.68, 3.08, 0.46, 0.46, 0.16, "stone");
+    box(-0.86, -0.6, 3.245, 0.3, 0.3, 0.015, "dark");
     box(-0.43, 0.97, 0.05, 0.86, 0.42, 0.12, "stone");
     for (const x of [-0.87, 0.76]) {
       box(x, 0.98, 0.22, 0.12, 0.12, 0.7, "log");
@@ -142,31 +226,61 @@ function model(id: StationId) {
       box(x + 0.025, 0.79, 0.3, 0.27, 0.21, 0.15, "leaf");
     }
   } else if (id === "contact") {
-    box(-1.08, -0.87, 0, 2.16, 1.9, 0.12, "stone");
-    box(-0.85, -0.5, 0.12, 1.7, 1.3, 0.65, "gold");
-    box(-0.96, -0.57, 0.76, 1.92, 1.44, 0.12, "wood");
-    box(-0.75, 0.81, 0.29, 1.5, 0.04, 0.4, "green");
-    for (const x of [-0.85, 0.78])
-      box(x, -0.42, 0.85, 0.075, 0.075, 0.85, "steel");
-    // Block-built red and white parasol, with a stepped square silhouette.
+    // Raised handcart: exposed wheels, axle, handle and a proper counter.
+    for (const x of [-1.02, 0.82])
+      for (const y of [-0.55, 0.48]) {
+        box(x, y, 0.02, 0.23, 0.28, 0.34, "dark");
+        box(x - 0.012, y + 0.07, 0.1, 0.26, 0.13, 0.16, "steel");
+      }
+    box(-1.02, -0.42, 0.23, 2.04, 0.1, 0.11, "steel");
+    box(-1.02, 0.6, 0.23, 2.04, 0.1, 0.11, "steel");
+    box(-0.87, -0.61, 0.32, 1.74, 1.37, 0.57, "gold");
+    box(-0.96, -0.68, 0.89, 1.92, 1.51, 0.12, "dark");
+    for (const y of [-0.4, 0.45])
+      box(0.87, y, 0.72, 0.36, 0.065, 0.065, "steel");
+    box(1.18, -0.4, 0.72, 0.065, 0.915, 0.065, "dark");
+    // Tall single mast leaves a clear opening between counter and umbrella.
+    box(-0.055, -0.52, 0.98, 0.11, 0.11, 1.67, "steel");
     for (let level = 0; level < 3; level++) {
-      const size = 2.3 - level * 0.62;
+      const size = 2.3 - level * 0.65;
       for (let stripe = 0; stripe < 4; stripe++)
         box(
           -size / 2 + (stripe * size) / 4,
-          -size / 2,
-          1.6 + level * 0.14,
+          -0.38 - size * 0.35,
+          2.24 + level * 0.14,
           size / 4,
-          size,
+          size * 0.7,
           0.12,
           stripe % 2 ? "white" : "red",
         );
     }
-    box(-0.06, -0.06, 1.99, 0.12, 0.12, 0.12, "steel");
+    box(-0.06, -0.44, 2.64, 0.12, 0.12, 0.13, "steel");
+    // Three visible phones, with screens and physical number keys.
     for (let i = 0; i < 3; i++) {
-      box(-0.56 + i * 0.4, 0.31, 0.88, 0.23, 0.31, 0.045, "dark");
-      box(-0.53 + i * 0.4, 0.37, 0.93, 0.17, 0.17, 0.012, "glass");
+      const x = -0.67 + i * 0.5;
+      box(x, 0.05, 1.01, 0.3, 0.45, 0.09, "dark");
+      box(x + 0.025, 0.17, 1.1, 0.25, 0.09, 0.5, "dark");
+      box(x + 0.055, 0.265, 1.29, 0.19, 0.015, 0.25, "screen");
+      for (let key = 0; key < 6; key++)
+        box(
+          x + 0.04 + (key % 3) * 0.075,
+          0.31 + Math.floor(key / 3) * 0.075,
+          1.105,
+          0.05,
+          0.045,
+          0.02,
+          "white",
+        );
     }
+    // Freestanding lime sign attached to the cart, facing the path.
+    for (const x of [-0.84, 0.78]) box(x, 0.78, 0.88, 0.06, 0.07, 1.1, "steel");
+    box(-0.94, 0.79, 0.56, 1.88, 0.07, 0.7, "green");
+    // Blue plastic chair behind the cart.
+    box(-1.12, -0.9, 0.45, 0.49, 0.46, 0.085, "blue");
+    box(-1.12, -0.94, 0.53, 0.49, 0.085, 0.5, "blue");
+    for (const x of [-1.1, -0.71])
+      for (const y of [-0.88, -0.53])
+        box(x, y, 0.03, 0.065, 0.065, 0.43, "blue");
   } else {
     box(-1.05, -0.93, 0, 2.1, 1.93, 0.18, "stone");
     box(-0.9, -0.8, 0.18, 1.8, 1.6, 1.12, "stone");
@@ -256,60 +370,88 @@ export function drawStation(
         depth: points.reduce((sum, v) => sum + v.x + v.y + v.z * 0.9, 0) / 4,
       });
   }
+  const ground = project(0, 0, 0);
+  const unit = Math.abs(project(1, 0, 0).x - ground.x);
+  ctx.save();
+  ctx.translate(ground.x + unit * 0.22, ground.y + unit * 0.26);
+  ctx.scale(1, 0.48);
+  const shadow = ctx.createRadialGradient(0, 0, unit * 0.3, 0, 0, unit * 2.2);
+  shadow.addColorStop(0, "rgba(12, 22, 17, .4)");
+  shadow.addColorStop(1, "rgba(12, 22, 17, 0)");
+  ctx.fillStyle = shadow;
+  ctx.fillRect(-unit * 2.2, -unit * 2.2, unit * 4.4, unit * 4.4);
+  ctx.restore();
   faces.sort((a, b) => a.depth - b.depth);
   for (const face of faces) {
-    const [a, b, , d] = face.points;
-    const point = (u: number, v: number) =>
-      project(
-        a.x + (b.x - a.x) * u + (d.x - a.x) * v,
-        a.y + (b.y - a.y) * u + (d.y - a.y) * v,
-        a.z + (b.z - a.z) * u + (d.z - a.z) * v,
+    const image = materialTexture(
+      face.material,
+      face.w,
+      face.h,
+      face.shade,
+      face.top,
+    );
+    if (!image) continue;
+    const a = project(face.points[0].x, face.points[0].y, face.points[0].z);
+    const b = project(face.points[1].x, face.points[1].y, face.points[1].z);
+    const d = project(face.points[3].x, face.points[3].y, face.points[3].z);
+    ctx.save();
+    ctx.imageSmoothingEnabled = false;
+    ctx.transform(
+      (b.x - a.x) / image.width,
+      (b.y - a.y) / image.width,
+      (d.x - a.x) / image.height,
+      (d.y - a.y) / image.height,
+      a.x,
+      a.y,
+    );
+    ctx.drawImage(image, 0, 0);
+    ctx.restore();
+  }
+  if (id === "about") {
+    for (const [x, y, z] of [
+      [-0.81, 1.03, 0.87],
+      [0.82, 1.03, 0.87],
+      [0, 1.12, 2.3],
+    ]) {
+      const light = project(x, y, z),
+        radius = unit * 0.48;
+      const glow = ctx.createRadialGradient(
+        light.x,
+        light.y,
+        0,
+        light.x,
+        light.y,
+        radius,
       );
-    const cols = Math.max(1, Math.round(face.w * 10)),
-      rows = Math.max(1, Math.round(face.h * 10));
-    for (let row = 0; row < rows; row++)
-      for (let col = 0; col < cols; col++) {
-        const color = texture(face.material, col, row, face.top);
-        const rgb = [1, 3, 5].map((offset) =>
-          Math.round(
-            parseInt(color.slice(offset, offset + 2), 16) * face.shade,
-          ),
-        );
-        ctx.fillStyle = `rgb(${rgb.join(",")})`;
-        const points = [
-          point(col / cols, row / rows),
-          point((col + 1.012) / cols, row / rows),
-          point((col + 1.012) / cols, (row + 1.012) / rows),
-          point(col / cols, (row + 1.012) / rows),
-        ];
-        ctx.beginPath();
-        points.forEach((p, i) =>
-          i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y),
-        );
-        ctx.closePath();
-        ctx.fill();
-      }
+      glow.addColorStop(0, "rgba(255, 198, 82, .32)");
+      glow.addColorStop(1, "rgba(255, 198, 82, 0)");
+      ctx.save();
+      ctx.globalCompositeOperation = "screen";
+      ctx.fillStyle = glow;
+      ctx.fillRect(light.x - radius, light.y - radius, radius * 2, radius * 2);
+      ctx.restore();
+    }
   }
   if (id === "contact") {
-    const origin = project(-0.75, 0.86, 0.69),
-      right = project(0.75, 0.86, 0.69),
-      bottom = project(-0.75, 0.86, 0.29);
+    const origin = project(-0.94, 0.865, 1.26),
+      right = project(0.94, 0.865, 1.26),
+      bottom = project(-0.94, 0.865, 0.56);
     ctx.save();
     ctx.transform(
-      (right.x - origin.x) / 150,
-      (right.y - origin.y) / 150,
-      (bottom.x - origin.x) / 40,
-      (bottom.y - origin.y) / 40,
+      (right.x - origin.x) / 160,
+      (right.y - origin.y) / 160,
+      (bottom.x - origin.x) / 72,
+      (bottom.y - origin.y) / 72,
       origin.x,
       origin.y,
     );
     ctx.fillStyle = "#172818";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.font = "bold 14px monospace";
-    ctx.fillText("MINUTOS $150", 75, 12);
-    ctx.font = "bold 8px monospace";
-    ctx.fillText("TODO DESTINO", 75, 29);
+    ctx.font = "bold 27px monospace";
+    ctx.fillText("MINUTOS", 80, 19);
+    ctx.font = "bold 34px monospace";
+    ctx.fillText("$150", 80, 51);
     ctx.restore();
   }
 }
