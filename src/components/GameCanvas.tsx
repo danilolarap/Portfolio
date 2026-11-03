@@ -168,6 +168,8 @@ export default function GameCanvas({
     let layerWidth = 0;
     let layerHeight = 0;
     let nearbyId: StationId | null = null;
+    const stationLayers = new Map<StationId, HTMLCanvasElement>();
+    const sortedStations = STATIONS.toSorted((a, b) => a.x + a.y - b.x - b.y);
 
     const resize = () => {
       const bounds = canvas.getBoundingClientRect();
@@ -190,6 +192,7 @@ export default function GameCanvas({
       backdrop.addColorStop(0, "#25485a");
       backdrop.addColorStop(1, "#172e39");
       worldLayer = null;
+      stationLayers.clear();
       layerUnavailable = false;
     };
     resize();
@@ -350,7 +353,6 @@ export default function GameCanvas({
           drawTree(prop.x, prop.y, (prop.x + prop.y) % 2);
         else block(prop.x, prop.y, "#a6aaa0", "#727f78", "#596c68", 0.55, 14);
       }
-      STATIONS.toSorted((a, b) => a.x + a.y - b.x - b.y).forEach(drawBuilding);
     };
 
     const buildWorldLayer = () => {
@@ -396,6 +398,54 @@ export default function GameCanvas({
         worldRef.current.playerRole.split(" /")[0],
         center.x,
         center.y - 35 * scale,
+      );
+    };
+
+    const drawStationLayer = (station: (typeof STATIONS)[number]) => {
+      const spriteWidth = Math.ceil(tile * 3.2 + 100);
+      const spriteHeight = Math.ceil(tile * 3.5 + 100);
+      const spriteBaseline = spriteHeight - (tile * 1.2 + 35);
+      let layer = stationLayers.get(station.id);
+      if (!layer) {
+        layer = document.createElement("canvas");
+        layer.width = Math.round(spriteWidth * pixelRatio);
+        layer.height = Math.round(spriteHeight * pixelRatio);
+        const layerContext = layer.getContext("2d");
+        if (!layerContext) {
+          context.save();
+          const camera = project(
+            positionRef.current.x - WORLD_ORIGIN.x,
+            positionRef.current.y - WORLD_ORIGIN.y,
+          );
+          context.translate(width * 0.5 - camera.x, height * 0.54 - camera.y);
+          drawBuilding(station);
+          context.restore();
+          return;
+        }
+        const anchor = project(
+          station.x - WORLD_ORIGIN.x,
+          station.y - WORLD_ORIGIN.y,
+        );
+        context = layerContext;
+        context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+        context.translate(
+          spriteWidth / 2 - anchor.x,
+          spriteBaseline - anchor.y,
+        );
+        drawBuilding(station);
+        context = mainContext;
+        stationLayers.set(station.id, layer);
+      }
+      const anchor = project(
+        station.x - positionRef.current.x,
+        station.y - positionRef.current.y,
+      );
+      context.drawImage(
+        layer,
+        anchor.x - spriteWidth / 2,
+        anchor.y - spriteBaseline,
+        spriteWidth,
+        spriteHeight,
       );
     };
 
@@ -535,19 +585,30 @@ export default function GameCanvas({
         nearbyRef.current = nearbyId;
         callbacksRef.current.onNearbyChange(nearbyId);
       }
-      const home = STATIONS.find((station) => station.id === "about")!;
-      drawChimneySmoke(
-        context,
-        (x, y, z) =>
-          project(
-            home.x + x - positionRef.current.x,
-            home.y + y - positionRef.current.y,
-            z * tile * 0.5,
-          ),
-        time,
-        reducedMotion,
-      );
-      drawPlayer(time);
+      let playerDrawn = false;
+      for (const station of sortedStations) {
+        if (
+          !playerDrawn &&
+          station.x + station.y > positionRef.current.x + positionRef.current.y
+        ) {
+          drawPlayer(time);
+          playerDrawn = true;
+        }
+        drawStationLayer(station);
+        if (station.id === "about")
+          drawChimneySmoke(
+            context,
+            (x, y, z) =>
+              project(
+                station.x + x - positionRef.current.x,
+                station.y + y - positionRef.current.y,
+                z * tile * 0.5,
+              ),
+            time,
+            reducedMotion,
+          );
+      }
+      if (!playerDrawn) drawPlayer(time);
       if (nearbyId) {
         const label = worldRef.current.open;
         const point = project(0, 0);
