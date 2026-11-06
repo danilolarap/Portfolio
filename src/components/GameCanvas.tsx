@@ -660,8 +660,17 @@ export default function GameCanvas({
           });
     visibilityObserver?.observe(canvas);
     document.addEventListener("visibilitychange", updateVisibility);
+    let disposed = false;
+    void document.fonts.load("bold 16px Mojangles").then(() => {
+      if (disposed) return;
+      // Station textures can be cached before the font finishes loading.
+      worldLayer = null;
+      stationLayers.clear();
+      scheduleFrame();
+    });
     scheduleFrame();
     return () => {
+      disposed = true;
       window.cancelAnimationFrame(animation);
       motionQuery.removeEventListener("change", updateMotion);
       observer.disconnect();
