@@ -23,6 +23,7 @@ export const STATIONS: { id: StationId; x: number; y: number }[] = [
 ];
 
 interface GameCanvasProps {
+  theme: "light" | "dark";
   character: CharacterId;
   active: boolean;
   suspended: boolean;
@@ -71,6 +72,7 @@ function polygon(
 }
 
 export default function GameCanvas({
+  theme,
   character,
   active,
   suspended,
@@ -189,8 +191,8 @@ export default function GameCanvas({
       mainContext.setTransform(ratio, 0, 0, ratio, 0, 0);
       tile = Math.max(27, Math.min(76, Math.min(width / 11.5, height / 7.7)));
       backdrop = mainContext.createLinearGradient(0, 0, 0, height);
-      backdrop.addColorStop(0, "#25485a");
-      backdrop.addColorStop(1, "#172e39");
+      backdrop.addColorStop(0, theme === "light" ? "#b5d7db" : "#25485a");
+      backdrop.addColorStop(1, theme === "light" ? "#e2ebe0" : "#172e39");
       worldLayer = null;
       stationLayers.clear();
       layerUnavailable = false;
@@ -677,7 +679,7 @@ export default function GameCanvas({
       visibilityObserver?.disconnect();
       document.removeEventListener("visibilitychange", updateVisibility);
     };
-  }, [active, suspended, world, touchVector]);
+  }, [active, suspended, world, touchVector, theme]);
 
   const selectStationAtPoint = (event: PointerEvent<HTMLCanvasElement>) => {
     if (!active) return;
