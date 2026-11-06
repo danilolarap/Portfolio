@@ -2,13 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Mojangles";
+  src: url("/fonts/Mojangles.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 :root {
   --bg: #0b2029;
   --line: #31545d;
   --text: #e9f3eb;
   --muted: #91aaa9;
   --mint: #9de4c2;
-  --mono: "Courier New", Consolas, monospace;
+  --mono: "Mojangles", "Courier New", monospace;
 }
 * {
   box-sizing: border-box;
@@ -216,7 +224,7 @@ button:focus-visible,
   max-width: 670px;
   margin: 0 auto;
   color: #a7bfba;
-  font-family: Arial, sans-serif;
+  font-family: var(--mono);
   font-size: 14px;
   font-weight: 400;
   letter-spacing: 0.02em;
@@ -716,9 +724,7 @@ button:focus-visible,
   color: #1c3a42;
 }
 .panel-subtitle {
-  font:
-    400 15px Arial,
-    sans-serif;
+  font: 400 15px var(--mono);
   color: #6b8581;
   margin: 0;
 }
@@ -728,9 +734,7 @@ button:focus-visible,
   margin: 24px 0;
 }
 .panel-description {
-  font:
-    400 16px/1.55 Arial,
-    sans-serif;
+  font: 400 16px/1.55 var(--mono);
   color: #3d5859;
   margin: 0 0 23px;
 }
@@ -772,9 +776,7 @@ button:focus-visible,
   padding: 11px 13px;
   background: #e7eee5;
   border-left: 4px solid var(--accent);
-  font:
-    400 12px/1.4 Arial,
-    sans-serif;
+  font: 400 12px/1.4 var(--mono);
   color: #56706d;
 }
 .panel-note span {
@@ -808,9 +810,7 @@ button:focus-visible,
   gap: 15px;
   padding: 10px;
   border-bottom: 1px solid #a6bab1;
-  font:
-    400 14px Arial,
-    sans-serif;
+  font: 400 14px var(--mono);
 }
 .help-keys {
   min-width: 92px;
@@ -1066,9 +1066,7 @@ section[id] {
 .site-links a {
   color: #a9c8bf;
   text-decoration: none;
-  font:
-    600 11px Arial,
-    sans-serif;
+  font: 600 11px var(--mono);
   transition: color 0.2s;
   white-space: nowrap;
 }
@@ -1283,9 +1281,7 @@ section[id] {
 .station-about-content p {
   margin: 0;
   color: #3d5859;
-  font:
-    400 14px/1.6 Arial,
-    sans-serif;
+  font: 400 14px/1.6 var(--mono);
 }
 .station-about-content ul {
   display: flex;
@@ -1300,9 +1296,7 @@ section[id] {
   border: 1px solid #91aaa0;
   color: #365755;
   background: #c3d2c7;
-  font:
-    700 10px/1.35 Arial,
-    sans-serif;
+  font: 700 10px/1.35 var(--mono);
 }
 .station-project-list {
   display: grid;
@@ -1334,9 +1328,7 @@ section[id] {
   max-width: 330px;
   margin: 0;
   color: #4d6764;
-  font:
-    400 11px/1.4 Arial,
-    sans-serif;
+  font: 400 11px/1.4 var(--mono);
 }
 .station-project-links {
   display: grid;
@@ -1379,9 +1371,7 @@ section[id] {
   font-size: 9px;
 }
 .station-skill strong {
-  font:
-    700 12px/1.35 Arial,
-    sans-serif;
+  font: 700 12px/1.35 var(--mono);
 }
 .station-contact-list {
   display: grid;
@@ -1397,9 +1387,7 @@ section[id] {
   color: #563c39;
   background: #ead0c5;
   text-decoration: none;
-  font:
-    400 12px Arial,
-    sans-serif;
+  font: 400 12px var(--mono);
 }
 .station-contact-list a:hover {
   background: #f2ddd1;
@@ -1465,9 +1453,7 @@ section[id] {
   margin: 0;
   max-width: 650px;
   color: #a6c2ba;
-  font:
-    400 17px/1.6 Arial,
-    sans-serif;
+  font: 400 17px/1.6 var(--mono);
 }
 .content-card {
   border: 2px solid #4c7578;
@@ -1487,9 +1473,7 @@ section[id] {
 }
 .content-card p {
   color: #a7c4bb;
-  font:
-    400 14px/1.55 Arial,
-    sans-serif;
+  font: 400 14px/1.55 var(--mono);
   margin: 0;
 }
 .card-index {
@@ -1724,9 +1708,7 @@ section[id] {
 }
 .section-note {
   color: #85a9a5;
-  font:
-    400 13px Arial,
-    sans-serif;
+  font: 400 13px var(--mono);
   margin: 25px 0 0;
 }
 .experience-list {
@@ -1777,9 +1759,7 @@ section[id] {
 .experience-card p {
   margin: 0;
   color: #9dbcb0;
-  font:
-    13px/1.4 Arial,
-    sans-serif;
+  font: 13px/1.4 var(--mono);
 }
 .contact-grid {
   display: grid;
@@ -1855,9 +1835,7 @@ section[id] {
   display: block;
   margin-top: 6px;
   color: #a0c0b6;
-  font:
-    400 13px Arial,
-    sans-serif;
+  font: 400 13px var(--mono);
 }
 .contact-action {
   margin-left: auto;
@@ -1874,9 +1852,7 @@ section[id] {
   justify-content: center;
   gap: 10px;
   color: #a8c9bb;
-  font:
-    400 14px/1.5 Arial,
-    sans-serif;
+  font: 400 14px/1.5 var(--mono);
 }
 .skill-card {
   padding: 22px;
@@ -1935,9 +1911,7 @@ section[id] {
 .footer-inner p {
   margin: 8px 0 0;
   color: #8eada5;
-  font:
-    400 12px Arial,
-    sans-serif;
+  font: 400 12px var(--mono);
 }
 .footer-inner a {
   color: #a7dfbb;
@@ -1948,9 +1922,7 @@ section[id] {
 }
 .footer-inner small {
   color: #6d9290;
-  font:
-    400 11px Arial,
-    sans-serif;
+  font: 400 11px var(--mono);
 }
 
 @media (max-width: 1120px) {
@@ -2001,9 +1973,7 @@ section[id] {
     padding: 13px;
     border: 1px solid #31565c;
     background: #173842;
-    font:
-      600 13px Arial,
-      sans-serif;
+    font: 600 13px var(--mono);
   }
   .mobile-nav small {
     color: #83bea9;
@@ -2424,9 +2394,7 @@ section[id] {
 .login-profile {
   margin: 0 0 17px;
   color: #b8c6a4;
-  font:
-    11px/1.4 Arial,
-    sans-serif;
+  font: 11px/1.4 var(--mono);
 }
 .login-version span {
   padding: 0 5px;
@@ -2443,9 +2411,7 @@ section[id] {
 .login-subtitle {
   margin: 9px 0 0;
   color: #b2c39b;
-  font:
-    13px Arial,
-    sans-serif;
+  font: 13px var(--mono);
 }
 .login-divider {
   display: flex;
@@ -2653,9 +2619,7 @@ section[id] {
   max-width: 520px;
   margin: 10px 0 20px;
   color: #b8c6a4;
-  font:
-    13px/1.5 Arial,
-    sans-serif;
+  font: 13px/1.5 var(--mono);
 }
 .controls-columns {
   display: grid;
@@ -2681,9 +2645,7 @@ section[id] {
   align-items: center;
   gap: 9px;
   color: #bbc9a8;
-  font:
-    11px Arial,
-    sans-serif;
+  font: 11px var(--mono);
 }
 .key-cluster {
   display: grid;
