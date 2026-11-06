@@ -2204,7 +2204,7 @@ section[id] {
 }
 .hud-menu-button {
   min-height: 31px;
-  padding: 0 13px;
+  padding: 6px 13px;
   border: 1px solid #92ad83;
   color: #e8efdb;
   background: #3e5e48;
@@ -2828,6 +2828,7 @@ section[id] {
     min-height: 45px;
     gap: 8px;
     padding: 6px 7px;
+    flex-wrap: wrap;
   }
   .hud-world-title {
     gap: 6px;
@@ -2841,7 +2842,8 @@ section[id] {
   }
   .hud-menu-button {
     min-height: 28px;
-    padding: 0 8px;
+    margin-left: auto;
+    padding: 6px 8px;
     font-size: 8px;
   }
   .game-hud-bottom {
