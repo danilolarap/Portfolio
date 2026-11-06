@@ -236,7 +236,7 @@ export const content: Record<Language, PortfolioContent> = {
         right: "Derecha",
       },
       start: "Comenzar a explorar",
-      exit: "Menú",
+      exit: "Volver al menú principal",
       tapHint: "Toca una edificación para seleccionarla",
     },
     common: {
@@ -462,7 +462,7 @@ export const content: Record<Language, PortfolioContent> = {
       ],
       directions: { up: "Up", down: "Down", left: "Left", right: "Right" },
       start: "Start exploring",
-      exit: "Menu",
+      exit: "Back to main menu",
       tapHint: "Tap a building to select it",
     },
     common: {
