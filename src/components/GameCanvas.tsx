@@ -325,7 +325,7 @@ export default function GameCanvas({
       context.strokeStyle = "#c4dca2";
       context.strokeRect(sign.x - signWidth / 2, sign.y - 7, signWidth, 15);
       context.fillStyle = "#edf1d6";
-      context.font = `bold ${Math.max(8, tile * 0.16)}px monospace`;
+      context.font = `bold ${Math.max(8, tile * 0.16)}px Mojangles, monospace`;
       context.textAlign = "center";
       context.textBaseline = "middle";
       context.fillText(
@@ -390,7 +390,7 @@ export default function GameCanvas({
         reducedMotion,
       });
 
-      context!.font = `bold ${Math.max(8, tile * 0.22)}px monospace`;
+      context!.font = `bold ${Math.max(8, tile * 0.22)}px Mojangles, monospace`;
       context!.textAlign = "center";
       context!.textBaseline = "middle";
       context!.fillStyle = "#f2f2d8";
@@ -617,7 +617,7 @@ export default function GameCanvas({
         context!.strokeStyle = "#d4d8a1";
         context!.strokeRect(point.x - 58, point.y + 24, 116, 20);
         context!.fillStyle = "#f0f0d3";
-        context!.font = "bold 10px monospace";
+        context!.font = "bold 10px Mojangles, monospace";
         context!.textAlign = "center";
         context!.textBaseline = "middle";
         context!.fillText(

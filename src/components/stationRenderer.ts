@@ -451,9 +451,9 @@ export function drawStation(
     ctx.fillStyle = "#172818";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.font = "bold 27px monospace";
+    ctx.font = "bold 27px Mojangles, monospace";
     ctx.fillText("MINUTOS", 80, 19);
-    ctx.font = "bold 34px monospace";
+    ctx.font = "bold 34px Mojangles, monospace";
     ctx.fillText("$150", 80, 51);
     ctx.restore();
   }
