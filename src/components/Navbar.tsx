@@ -8,12 +8,16 @@ import {
 } from "@/data/content";
 
 interface NavbarProps {
+  theme: "light" | "dark";
+  onThemeChange: () => void;
   language: Language;
   copy: PortfolioContent;
   onLanguageChange: () => void;
 }
 
 export default function Navbar({
+  theme,
+  onThemeChange,
   language,
   copy,
   onLanguageChange,
@@ -55,6 +59,38 @@ export default function Navbar({
             <span className={language === "es" ? "active" : ""}>ES</span>
             <span className="language-divider">/</span>
             <span className={language === "en" ? "active" : ""}>EN</span>
+          </button>
+          <button
+            className="theme-switch"
+            type="button"
+            onClick={onThemeChange}
+            aria-label={
+              theme === "dark"
+                ? copy.settings.lightMode
+                : copy.settings.darkMode
+            }
+            title={
+              theme === "dark"
+                ? copy.settings.lightMode
+                : copy.settings.darkMode
+            }
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
+            >
+              {theme === "dark" ? (
+                <>
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2" />
+                </>
+              ) : (
+                <path d="M20.8 14A9 9 0 0 1 10 3.2 9 9 0 1 0 20.8 14Z" />
+              )}
+            </svg>
           </button>
           <button
             className={`menu-toggle ${menuOpen ? "is-open" : ""}`}
