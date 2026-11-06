@@ -25,6 +25,15 @@ export interface PortfolioContent {
   menuOpen: string;
   menuClose: string;
   languageLabel: string;
+  settings: {
+    title: string;
+    music: string;
+    enabled: string;
+    disabled: string;
+    description: string;
+    lightMode: string;
+    darkMode: string;
+  };
   hero: {
     eyebrow: string;
     titleFirst: string;
@@ -153,6 +162,15 @@ export const content: Record<Language, PortfolioContent> = {
     menuOpen: "Abrir menú",
     menuClose: "Cerrar menú",
     languageLabel: "Cambiar idioma a inglés",
+    settings: {
+      title: "Ajustes",
+      music: "Música de fondo",
+      enabled: "Activada",
+      disabled: "Desactivada",
+      description: "Minefolio · Reproducción en bucle",
+      lightMode: "Activar modo claro",
+      darkMode: "Activar modo oscuro",
+    },
     hero: {
       eyebrow: "PORTAFOLIO INTERACTIVO / EDICIÓN 01",
       titleFirst: "Bienvenido a",
@@ -384,6 +402,15 @@ export const content: Record<Language, PortfolioContent> = {
     menuOpen: "Open menu",
     menuClose: "Close menu",
     languageLabel: "Switch language to Spanish",
+    settings: {
+      title: "Settings",
+      music: "Background music",
+      enabled: "On",
+      disabled: "Off",
+      description: "Minefolio · Playing on loop",
+      lightMode: "Switch to light mode",
+      darkMode: "Switch to dark mode",
+    },
     hero: {
       eyebrow: "INTERACTIVE PORTFOLIO / EDITION 01",
       titleFirst: "Welcome to",
