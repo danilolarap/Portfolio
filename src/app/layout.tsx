@@ -10,7 +10,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="es" className="scroll-smooth">
+    <html lang="es" data-theme="dark" className="scroll-smooth">
+      <head>
+        <link
+          rel="preload"
+          href="/fonts/Mojangles.ttf"
+          as="font"
+          type="font/ttf"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body>{children}</body>
     </html>
   );
