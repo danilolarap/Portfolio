@@ -445,6 +445,9 @@ export function drawStation(
       origin.x,
       origin.y,
     );
+    // Paint the entire sign face after the cart so its counter cannot cross the lettering.
+    ctx.fillStyle = "#b0e45b";
+    ctx.fillRect(0, 0, 160, 72);
     ctx.fillStyle = "#172818";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
