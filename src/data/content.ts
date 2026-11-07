@@ -115,6 +115,8 @@ export interface PortfolioContent {
     title: string;
     intro: string;
     ratingLabel: string;
+    previous: string;
+    next: string;
     cards: {
       name: string;
       role: string;
@@ -334,6 +336,8 @@ export const content: Record<Language, PortfolioContent> = {
       intro:
         "La experiencia de quienes han compartido proyectos y retos conmigo.",
       ratingLabel: "de 5 estrellas del Nether",
+      previous: "Testimonio anterior",
+      next: "Siguiente testimonio",
       cards: [
         {
           name: "Diego Sandoval",
@@ -599,6 +603,8 @@ export const content: Record<Language, PortfolioContent> = {
       intro:
         "Thoughts from people who have shared projects and challenges with me.",
       ratingLabel: "out of 5 Nether stars",
+      previous: "Previous testimonial",
+      next: "Next testimonial",
       cards: [
         {
           name: "Diego Sandoval",

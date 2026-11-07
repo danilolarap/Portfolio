@@ -1678,9 +1678,77 @@ section[id] {
 }
 .testimonials-list {
   display: grid;
-  gap: 24px;
+  min-width: 0;
+  grid-column: 2;
+  grid-row: 1;
+}
+.testimonial-carousel {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 48px;
+  align-items: center;
+  gap: 20px;
+}
+.testimonial-carousel:focus-visible {
+  outline: 3px solid var(--mint);
+  outline-offset: 8px;
+}
+.testimonial-arrow {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 2px solid #a8c794;
+  color: #f3f5dc;
+  background: #3b5b42;
+  box-shadow:
+    inset 3px 3px #6c8a5e,
+    inset -4px -4px #243d30,
+    4px 4px #09232c;
+}
+.testimonial-arrow:hover {
+  background: #4e704a;
+}
+.testimonial-arrow:active {
+  transform: translate(2px, 2px);
+}
+.testimonial-arrow:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.testimonial-arrow svg {
+  width: 26px;
+  height: 26px;
+  fill: currentColor;
+  filter: drop-shadow(2px 2px #20382b);
+}
+.testimonial-arrow-next svg {
+  transform: rotate(180deg);
+}
+.testimonial-arrow-previous {
+  grid-column: 1;
+  grid-row: 1;
+}
+.testimonial-arrow-next {
+  grid-column: 3;
+  grid-row: 1;
+}
+html[data-theme="light"] .testimonial-arrow {
+  background: #3f6038;
+  color: #fffef0;
+  border-color: #67835a;
+  box-shadow:
+    inset 3px 3px #759465,
+    inset -4px -4px #223e29,
+    4px 4px #a4b893;
+}
+html[data-theme="light"] .testimonial-arrow:hover {
+  background: #36522f;
+}
+.testimonial-card[hidden] {
+  display: none;
 }
 .testimonial-card {
+  min-height: 260px;
   position: relative;
   isolation: isolate;
   display: grid;
@@ -1791,7 +1859,25 @@ html[data-theme="light"] .testimonial-photo-link {
   box-shadow: 5px 5px #bacaba;
 }
 @media (max-width: 600px) {
+  .testimonial-carousel {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 16px;
+  }
+  .testimonials-list {
+    grid-column: 1 / -1;
+  }
+  .testimonial-arrow-previous {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: end;
+  }
+  .testimonial-arrow-next {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
+  }
   .testimonial-card {
+    min-height: 300px;
     grid-template-columns: minmax(88px, 28%) minmax(0, 1fr);
     gap: 16px;
     padding: 42px 16px 22px;
