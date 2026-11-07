@@ -114,7 +114,15 @@ export interface PortfolioContent {
     eyebrow: string;
     title: string;
     intro: string;
-    cards: string[];
+    ratingLabel: string;
+    cards: {
+      name: string;
+      role: string;
+      quote: string;
+      image: string;
+      imagePosition: string;
+      rating: 4 | 5;
+    }[];
   };
   experience: {
     eyebrow: string;
@@ -323,8 +331,38 @@ export const content: Record<Language, PortfolioContent> = {
     testimonials: {
       eyebrow: "03 / VOCES DEL CAMINO",
       title: "Testimonios",
-      intro: "Esta sección se completará más adelante.",
-      cards: [],
+      intro:
+        "La experiencia de quienes han compartido proyectos y retos conmigo.",
+      ratingLabel: "de 5 estrellas del Nether",
+      cards: [
+        {
+          name: "Diego Sandoval",
+          role: "Empresario",
+          quote:
+            "Puntual y comprometido, con una excelente capacidad para trabajar bajo presión.",
+          image: "/testimonials/diego-sandoval.jpg",
+          imagePosition: "50% 62%",
+          rating: 5,
+        },
+        {
+          name: "Juan Pinilla",
+          role: "Desarrollador de Software",
+          quote:
+            "Muy organizado y con una actitud constante de aprendizaje y mejora.",
+          image: "/testimonials/juan-pinilla.jpg",
+          imagePosition: "58% 36%",
+          rating: 5,
+        },
+        {
+          name: "Nicolás Ramos",
+          role: "Estudiante de Ingeniería de Software",
+          quote:
+            "Se destaca por su capacidad para trabajar en equipo y su calidad humana.",
+          image: "/testimonials/nicolas-ramos.jpg",
+          imagePosition: "50% 34%",
+          rating: 4,
+        },
+      ],
     },
     experience: {
       eyebrow: "04 / TRAYECTORIA",
@@ -558,8 +596,38 @@ export const content: Record<Language, PortfolioContent> = {
     testimonials: {
       eyebrow: "03 / VOICES ALONG THE WAY",
       title: "Testimonials",
-      intro: "This section will be completed later.",
-      cards: [],
+      intro:
+        "Thoughts from people who have shared projects and challenges with me.",
+      ratingLabel: "out of 5 Nether stars",
+      cards: [
+        {
+          name: "Diego Sandoval",
+          role: "Entrepreneur",
+          quote:
+            "Punctual and committed, with an excellent ability to work under pressure.",
+          image: "/testimonials/diego-sandoval.jpg",
+          imagePosition: "50% 62%",
+          rating: 5,
+        },
+        {
+          name: "Juan Pinilla",
+          role: "Software Developer",
+          quote:
+            "Highly organized, with a consistent drive to learn and improve.",
+          image: "/testimonials/juan-pinilla.jpg",
+          imagePosition: "58% 36%",
+          rating: 5,
+        },
+        {
+          name: "Nicolás Ramos",
+          role: "Software Engineering Student",
+          quote:
+            "Stands out for his teamwork skills and the quality of his character.",
+          image: "/testimonials/nicolas-ramos.jpg",
+          imagePosition: "50% 34%",
+          rating: 4,
+        },
+      ],
     },
     experience: {
       eyebrow: "04 / THE JOURNEY",
