@@ -36,7 +36,9 @@ The three JPEG covers were copied byte-for-byte from the supplied JFIF files; on
 
 ## Content still needed
 
-The interface deliberately marks missing information as pending. Before final submission, add a real resume PDF, project details and screenshots, at least three authentic testimonials, education and work history, and confirmed contact channels. Do not replace placeholders with invented claims.
+The interface deliberately marks missing information as pending. Before final submission, add a real resume PDF, project details and screenshots, education and work history, and confirmed contact channels. Do not replace placeholders with invented claims.
+
+Testimonials include the supplied quotes and portraits for Diego Sandoval (5/5), Juan Pinilla (5/5), and Nicolás Ramos (4/5), with English translations and Nether star ratings. Original portrait files are preserved in `public/testimonials/`; the cards display a 4:3 crop without modifying the source images.
 
 ## Deployment
 
