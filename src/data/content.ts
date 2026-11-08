@@ -310,6 +310,7 @@ export const content: Record<Language, PortfolioContent> = {
           description:
             "Organizador de equipaje que optimiza la distribución de artículos dentro de maletas de viaje.",
           repository: "https://github.com/danilolarap/PackGuide.git",
+          production: "https://pack-guide-demo.vercel.app/",
         },
         {
           index: "03",
@@ -577,6 +578,7 @@ export const content: Record<Language, PortfolioContent> = {
           description:
             "A travel packing organizer that optimizes how items fit inside suitcases.",
           repository: "https://github.com/danilolarap/PackGuide.git",
+          production: "https://pack-guide-demo.vercel.app/",
         },
         {
           index: "03",
