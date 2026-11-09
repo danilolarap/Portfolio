@@ -325,11 +325,11 @@ export const content: Record<Language, PortfolioContent> = {
           cover: "/projects/tiltclock.jpg",
           description:
             "Aplicación de reloj con carátulas interactivas en formato GLB.",
-          repository: "https://github.com/danilolarap/TiltClock.git",
-          repositoryLabel: "Ver repositorio demo",
+          repository: "https://github.com/danilolarap/TiltClock-deploy.git",
+          repositoryLabel: "Ver repositorio app",
           additionalRepository: {
-            url: "https://github.com/danilolarap/TiltClock-deploy.git",
-            label: "Ver repositorio app",
+            url: "https://github.com/danilolarap/TiltClock.git",
+            label: "Ver repositorio demo",
           },
           production: "https://tilt-clock.vercel.app/",
         },
@@ -603,11 +603,11 @@ export const content: Record<Language, PortfolioContent> = {
           cover: "/projects/tiltclock.jpg",
           description:
             "A clock application featuring interactive watch faces in GLB format.",
-          repository: "https://github.com/danilolarap/TiltClock.git",
-          repositoryLabel: "View demo repository",
+          repository: "https://github.com/danilolarap/TiltClock-deploy.git",
+          repositoryLabel: "View app repository",
           additionalRepository: {
-            url: "https://github.com/danilolarap/TiltClock-deploy.git",
-            label: "View app repository",
+            url: "https://github.com/danilolarap/TiltClock.git",
+            label: "View demo repository",
           },
           production: "https://tilt-clock.vercel.app/",
         },
