@@ -74,8 +74,17 @@ export default function WorldDialog({
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {copy.projects.openRepository}
+                  {project.repositoryLabel ?? copy.projects.openRepository}
                 </a>
+                {project.additionalRepository && (
+                  <a
+                    href={project.additionalRepository.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {project.additionalRepository.label}
+                  </a>
+                )}
               </div>
             </article>
           ))}
