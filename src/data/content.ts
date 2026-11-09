@@ -106,6 +106,8 @@ export interface PortfolioContent {
       title: string;
       description: string;
       repository: string;
+      repositoryLabel?: string;
+      additionalRepository?: { url: string; label: string };
       cover: string;
       production?: string;
     }[];
