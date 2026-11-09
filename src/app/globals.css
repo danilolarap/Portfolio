@@ -1568,6 +1568,15 @@ section[id] {
   margin-left: auto;
   border: 2px solid #6a9b91;
 }
+section.section-projects {
+  --projects-section-padding: clamp(76px, 9vw, 124px);
+  padding-block: var(--projects-section-padding);
+  /* Align the content below the navigation instead of the padded section edge. */
+  scroll-margin-top: calc(8px - var(--projects-section-padding));
+}
+.section-projects .section-heading {
+  margin-bottom: 24px;
+}
 .projects-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -2215,6 +2224,9 @@ html[data-theme="light"] .testimonial-photo-link {
   }
   .content-section {
     padding: 72px 18px;
+  }
+  section.section-projects {
+    --projects-section-padding: 72px;
   }
   .section-heading {
     margin-bottom: 26px;
