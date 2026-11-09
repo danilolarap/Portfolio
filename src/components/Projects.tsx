@@ -33,9 +33,20 @@ export default function Projects({ copy }: { copy: PortfolioContent }) {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {copy.projects.openRepository}
+                    {project.repositoryLabel ?? copy.projects.openRepository}
                     <span aria-hidden="true" className="button-arrow" />
                   </a>
+                  {project.additionalRepository && (
+                    <a
+                      className="project-repository-link"
+                      href={project.additionalRepository.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {project.additionalRepository.label}
+                      <span aria-hidden="true" className="button-arrow" />
+                    </a>
+                  )}
                 </div>
               </div>
             </article>
