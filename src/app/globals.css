@@ -1571,7 +1571,7 @@ section[id] {
 .projects-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  direction: rtl;
+  direction: ltr;
   gap: 20px;
 }
 .project-card {
