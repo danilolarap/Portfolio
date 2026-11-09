@@ -312,6 +312,11 @@ export const content: Record<Language, PortfolioContent> = {
           description:
             "Organizador de equipaje que optimiza la distribución de artículos dentro de maletas de viaje.",
           repository: "https://github.com/danilolarap/PackGuide.git",
+          repositoryLabel: "Ver repositorio app",
+          additionalRepository: {
+            url: "https://github.com/danilolarap/PackGuide-demo.git",
+            label: "Ver repositorio demo",
+          },
           production: "https://pack-guide-demo.vercel.app/",
         },
         {
@@ -321,6 +326,11 @@ export const content: Record<Language, PortfolioContent> = {
           description:
             "Aplicación de reloj con carátulas interactivas en formato GLB.",
           repository: "https://github.com/danilolarap/TiltClock.git",
+          repositoryLabel: "Ver repositorio demo",
+          additionalRepository: {
+            url: "https://github.com/danilolarap/TiltClock-deploy.git",
+            label: "Ver repositorio app",
+          },
           production: "https://tilt-clock.vercel.app/",
         },
         {
@@ -580,6 +590,11 @@ export const content: Record<Language, PortfolioContent> = {
           description:
             "A travel packing organizer that optimizes how items fit inside suitcases.",
           repository: "https://github.com/danilolarap/PackGuide.git",
+          repositoryLabel: "View app repository",
+          additionalRepository: {
+            url: "https://github.com/danilolarap/PackGuide-demo.git",
+            label: "View demo repository",
+          },
           production: "https://pack-guide-demo.vercel.app/",
         },
         {
@@ -589,6 +604,11 @@ export const content: Record<Language, PortfolioContent> = {
           description:
             "A clock application featuring interactive watch faces in GLB format.",
           repository: "https://github.com/danilolarap/TiltClock.git",
+          repositoryLabel: "View demo repository",
+          additionalRepository: {
+            url: "https://github.com/danilolarap/TiltClock-deploy.git",
+            label: "View app repository",
+          },
           production: "https://tilt-clock.vercel.app/",
         },
         {
