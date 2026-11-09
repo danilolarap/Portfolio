@@ -48,14 +48,22 @@ export default function Home() {
 
   const copy = content[language];
 
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      document.documentElement.classList.remove("theme-transitioning");
+    }, 700);
+    return () => window.clearTimeout(timer);
+  }, [theme]);
+
   return (
     <>
       <BackgroundMusic enabled={preferencesReady && musicEnabled} />
       <Navbar
         theme={theme}
-        onThemeChange={() =>
-          setTheme((current) => (current === "dark" ? "light" : "dark"))
-        }
+        onThemeChange={() => {
+          document.documentElement.classList.add("theme-transitioning");
+          setTheme((current) => (current === "dark" ? "light" : "dark"));
+        }}
         language={language}
         copy={copy}
         onLanguageChange={() =>
