@@ -10,6 +10,8 @@ import {
 interface NavbarProps {
   theme: "light" | "dark";
   onThemeChange: () => void;
+  musicEnabled: boolean;
+  onMusicChange: () => void;
   language: Language;
   copy: PortfolioContent;
   onLanguageChange: () => void;
@@ -18,6 +20,8 @@ interface NavbarProps {
 export default function Navbar({
   theme,
   onThemeChange,
+  musicEnabled,
+  onMusicChange,
   language,
   copy,
   onLanguageChange,
@@ -49,6 +53,35 @@ export default function Navbar({
           ))}
         </nav>
         <div className="nav-controls">
+          <button
+            className="music-switch"
+            type="button"
+            role="switch"
+            aria-checked={musicEnabled}
+            aria-label={copy.settings.music}
+            title={`${copy.settings.music}: ${musicEnabled ? copy.settings.enabled : copy.settings.disabled}`}
+            onClick={onMusicChange}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M4 9v6h4l5 4V5L8 9H4Z" />
+              {musicEnabled ? (
+                <>
+                  <path d="M16 9a4 4 0 0 1 0 6" />
+                  <path d="M19 6a8 8 0 0 1 0 12" />
+                </>
+              ) : (
+                <path d="m17 9 5 6m0-6-5 6" />
+              )}
+            </svg>
+          </button>
           <button
             className="language-switch"
             type="button"

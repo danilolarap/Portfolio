@@ -3123,7 +3123,8 @@ html[data-theme="light"] .testimonial-photo-link {
 :root {
   color-scheme: dark;
 }
-.theme-switch {
+.theme-switch,
+.music-switch {
   display: grid;
   place-items: center;
   flex: none;
@@ -3134,51 +3135,20 @@ html[data-theme="light"] .testimonial-photo-link {
   background: #1a3d47;
   box-shadow: inset -3px -3px #0b2732;
 }
-.theme-switch svg {
+.theme-switch svg,
+.music-switch svg {
   width: 21px;
   height: 21px;
 }
-.theme-switch:hover {
+.theme-switch:hover,
+.music-switch:hover {
   background: #2e5961;
 }
-.music-setting {
-  display: grid;
-  gap: 18px;
-  padding: 22px 0;
-  color: #e6ebd2;
+.music-switch {
+  color: #91aaa9;
 }
-.music-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  min-height: 48px;
-  padding: 10px;
-  border: 2px solid #8c9b76;
-  color: inherit;
-  background: #35473d;
-}
-.music-toggle-track {
-  width: 42px;
-  padding: 3px;
-  background: #182b28;
-  border: 1px solid #9da891;
-}
-.music-toggle-track > span {
-  display: block;
-  width: 14px;
-  height: 16px;
-  background: #a4ae99;
-}
-.music-toggle[aria-checked="true"] .music-toggle-track {
-  background: #557b3e;
-}
-.music-toggle[aria-checked="true"] .music-toggle-track > span {
-  transform: translateX(18px);
-  background: #d1ed9c;
-}
-.settings-panel .controls-back-button {
-  margin-top: 12px;
+.music-switch[aria-checked="true"] {
+  color: #a9d57e;
 }
 .game-menu-layer {
   overflow-y: auto;
@@ -3277,7 +3247,8 @@ html[data-theme="light"]
 html[data-theme="light"] .project-repository-link:hover {
   background: #b7c9bf;
 }
-html[data-theme="light"] :is(.language-switch, .theme-switch, .menu-toggle) {
+html[data-theme="light"]
+  :is(.language-switch, .theme-switch, .music-switch, .menu-toggle) {
   color: #173f50;
   background: var(--light-inset);
   border-color: var(--light-edge);
@@ -3325,12 +3296,7 @@ html[data-theme="light"] :is(.login-panel, .controls-panel) {
     inset -5px -5px #a4b5a6;
 }
 html[data-theme="light"]
-  :is(
-    .login-panel h1,
-    .controls-panel h1,
-    .character-showcase strong,
-    .music-setting
-  ) {
+  :is(.login-panel h1, .controls-panel h1, .character-showcase strong) {
   color: var(--light-heading);
 }
 html[data-theme="light"] :is(.login-panel h1, .controls-panel h1) {
@@ -3377,37 +3343,21 @@ html[data-theme="light"] :is(.login-play-button, .login-controls-button):hover {
   filter: none;
   background: #24596c;
 }
-html[data-theme="light"]
-  :is(.controls-column, .character-option, .music-toggle) {
+html[data-theme="light"] :is(.controls-column, .character-option) {
   background: var(--light-inset);
   color: #183f50;
 }
 html[data-theme="light"] .controls-column h2 {
   color: var(--light-heading);
 }
-html[data-theme="light"] :is(.music-toggle, .character-option):hover {
+html[data-theme="light"] .character-option:hover {
   background: #b7c9bf;
 }
 html[data-theme="light"] .characters-panel {
   scrollbar-color: #285b70 var(--light-canvas-alt);
 }
-html[data-theme="light"] .music-toggle-track {
-  background: #b5c3b6;
-  border-color: var(--light-edge);
-}
-html[data-theme="light"] .music-toggle-track > span {
-  background: #315d6e;
-}
-html[data-theme="light"]
-  .music-toggle[aria-checked="true"]
-  .music-toggle-track {
-  background: #194f63;
-}
-html[data-theme="light"]
-  .music-toggle[aria-checked="true"]
-  .music-toggle-track
-  > span {
-  background: #e5e8d9;
+html[data-theme="light"] .music-switch[aria-checked="true"] {
+  color: #24586a;
 }
 html[data-theme="light"] .character-option[aria-pressed="true"] {
   background: #aec4b4;

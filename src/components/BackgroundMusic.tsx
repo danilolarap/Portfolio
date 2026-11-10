@@ -1,10 +1,15 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
+import type { RefObject } from "react";
 
-export default function BackgroundMusic({ enabled }: { enabled: boolean }) {
-  const audioRef = useRef<HTMLAudioElement>(null);
-
+export default function BackgroundMusic({
+  enabled,
+  audioRef,
+}: {
+  enabled: boolean;
+  audioRef: RefObject<HTMLAudioElement | null>;
+}) {
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -25,7 +30,7 @@ export default function BackgroundMusic({ enabled }: { enabled: boolean }) {
       window.removeEventListener("keydown", play);
       audio.pause();
     };
-  }, [enabled]);
+  }, [enabled, audioRef]);
 
   return (
     <audio ref={audioRef} src="/audio/Minefolio.mp3" loop preload="none" />

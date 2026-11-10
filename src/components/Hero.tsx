@@ -12,23 +12,18 @@ import {
 } from "./characterRenderer";
 import type { PortfolioContent, StationId } from "@/data/content";
 
-type Screen = "title" | "controls" | "characters" | "settings" | "game";
+type Screen = "title" | "controls" | "characters" | "game";
 
 export default function Hero({
   copy,
   theme,
-  musicEnabled,
-  onMusicChange,
 }: {
   copy: PortfolioContent;
   theme: "light" | "dark";
-  musicEnabled: boolean;
-  onMusicChange: () => void;
 }) {
   const [character, setCharacter] = useState<CharacterId>("steve");
   const menuPanelRef = useRef<HTMLElement>(null);
   const charactersButtonRef = useRef<HTMLButtonElement>(null);
-  const settingsButtonRef = useRef<HTMLButtonElement>(null);
   const previousScreenRef = useRef<Screen>("title");
   const [screen, setScreen] = useState<Screen>("title");
   const [activeStation, setActiveStation] = useState<StationId | null>(null);
@@ -48,10 +43,7 @@ export default function Hero({
   }, []);
 
   useEffect(() => {
-    if (screen === "characters" || screen === "settings")
-      menuPanelRef.current?.focus();
-    if (screen === "title" && previousScreenRef.current === "settings")
-      settingsButtonRef.current?.focus();
+    if (screen === "characters") menuPanelRef.current?.focus();
     if (screen === "title" && previousScreenRef.current === "characters")
       charactersButtonRef.current?.focus();
     previousScreenRef.current = screen;
@@ -288,56 +280,7 @@ export default function Hero({
                 >
                   {copy.welcome.characters}
                 </button>
-                <button
-                  ref={settingsButtonRef}
-                  className="login-controls-button"
-                  type="button"
-                  onClick={() => setScreen("settings")}
-                >
-                  {copy.settings.title}
-                </button>
                 <p className="login-footnote">{copy.welcome.menuFooter}</p>
-              </section>
-            ) : screen === "settings" ? (
-              <section
-                className="controls-panel settings-panel"
-                aria-labelledby="settings-title"
-                ref={menuPanelRef}
-                tabIndex={-1}
-              >
-                <div className="controls-panel-head">
-                  <span>MINEFOLIO</span>
-                  <span className="pixel-status" />
-                </div>
-                <h1 id="settings-title">{copy.settings.title}</h1>
-                <p>{copy.settings.description}</p>
-                <div className="music-setting">
-                  <span id="music-label">{copy.settings.music}</span>
-                  <button
-                    type="button"
-                    className="music-toggle"
-                    role="switch"
-                    aria-checked={musicEnabled}
-                    aria-labelledby="music-label music-status"
-                    onClick={onMusicChange}
-                  >
-                    <span className="music-toggle-track" aria-hidden="true">
-                      <span />
-                    </span>
-                    <span id="music-status">
-                      {musicEnabled
-                        ? copy.settings.enabled
-                        : copy.settings.disabled}
-                    </span>
-                  </button>
-                </div>
-                <button
-                  className="login-play-button controls-back-button"
-                  type="button"
-                  onClick={() => setScreen("title")}
-                >
-                  {copy.world.exit}
-                </button>
               </section>
             ) : screen === "characters" ? (
               <section

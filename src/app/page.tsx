@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { content, type Language } from "@/data/content";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
@@ -17,6 +17,7 @@ export default function Home() {
   const [language, setLanguage] = useState<Language>("es");
   const [theme, setTheme] = useState<"light" | "dark">("dark");
   const [musicEnabled, setMusicEnabled] = useState(true);
+  const audioRef = useRef<HTMLAudioElement>(null);
   const [preferencesReady, setPreferencesReady] = useState(false);
 
   useEffect(() => {
@@ -57,12 +58,20 @@ export default function Home() {
 
   return (
     <>
-      <BackgroundMusic enabled={preferencesReady && musicEnabled} />
+      <BackgroundMusic
+        audioRef={audioRef}
+        enabled={preferencesReady && musicEnabled}
+      />
       <Navbar
         theme={theme}
         onThemeChange={() => {
           document.documentElement.classList.add("theme-transitioning");
           setTheme((current) => (current === "dark" ? "light" : "dark"));
+        }}
+        musicEnabled={musicEnabled}
+        onMusicChange={() => {
+          if (!musicEnabled) void audioRef.current?.play().catch(() => {});
+          setMusicEnabled((current) => !current);
         }}
         language={language}
         copy={copy}
@@ -71,12 +80,7 @@ export default function Home() {
         }
       />
       <main>
-        <Hero
-          copy={copy}
-          theme={theme}
-          musicEnabled={musicEnabled}
-          onMusicChange={() => setMusicEnabled((current) => !current)}
-        />
+        <Hero copy={copy} theme={theme} />
         <About copy={copy} />
         <Projects copy={copy} />
         <Testimonials copy={copy} />
