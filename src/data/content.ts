@@ -345,6 +345,10 @@ export const content: Record<Language, PortfolioContent> = {
           description:
             "Juego de carreras de canicas en 3D para dos jugadores, con una pista compartida, poderes y estrategia.",
           repository: "https://github.com/danilolarap/MarbleOverdrive.git",
+          download: {
+            url: "/downloads/MarbleOverdrive-Windows.zip",
+            label: "Descargar para Windows",
+          },
         },
       ],
     },
@@ -627,6 +631,10 @@ export const content: Record<Language, PortfolioContent> = {
           description:
             "A 3D marble racing game for two players, featuring a shared track, powers, and strategy.",
           repository: "https://github.com/danilolarap/MarbleOverdrive.git",
+          download: {
+            url: "/downloads/MarbleOverdrive-Windows.zip",
+            label: "Download for Windows",
+          },
         },
       ],
     },

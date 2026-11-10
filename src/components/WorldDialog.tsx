@@ -69,6 +69,11 @@ export default function WorldDialog({
                     {copy.projects.openProduction}
                   </a>
                 )}
+                {project.download && (
+                  <a href={project.download.url} download>
+                    {project.download.label}
+                  </a>
+                )}
                 <a
                   href={project.repository}
                   target="_blank"
