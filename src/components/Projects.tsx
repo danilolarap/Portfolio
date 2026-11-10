@@ -27,6 +27,16 @@ export default function Projects({ copy }: { copy: PortfolioContent }) {
                       <span aria-hidden="true" className="button-arrow" />
                     </a>
                   )}
+                  {project.download && (
+                    <a
+                      className="project-repository-link"
+                      href={project.download.url}
+                      download
+                    >
+                      {project.download.label}
+                      <span aria-hidden="true" className="button-arrow" />
+                    </a>
+                  )}
                   <a
                     className="project-repository-link"
                     href={project.repository}

@@ -108,6 +108,7 @@ export interface PortfolioContent {
       repository: string;
       repositoryLabel?: string;
       additionalRepository?: { url: string; label: string };
+      download?: { url: string; label: string };
       cover: string;
       production?: string;
     }[];
@@ -304,6 +305,10 @@ export const content: Record<Language, PortfolioContent> = {
             "Organizador interactivo de espacios para planificar distribuciones con una interfaz de arrastrar y soltar.",
           repository: "https://github.com/danilolarap/RoomLayout.git",
           production: "https://room-layout-red.vercel.app/",
+          download: {
+            url: "/downloads/RoomLayout-Windows.zip",
+            label: "Descargar para Windows",
+          },
         },
         {
           index: "02",
@@ -582,6 +587,10 @@ export const content: Record<Language, PortfolioContent> = {
             "An interactive space planner for arranging layouts with a drag-and-drop interface.",
           repository: "https://github.com/danilolarap/RoomLayout.git",
           production: "https://room-layout-red.vercel.app/",
+          download: {
+            url: "/downloads/RoomLayout-Windows.zip",
+            label: "Download for Windows",
+          },
         },
         {
           index: "02",
